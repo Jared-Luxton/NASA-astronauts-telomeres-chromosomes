@@ -1,9 +1,15 @@
 def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 
 	"""
-	opens raw telomere length count excel files from imageJ analyses and
-	extracts the individual mean telomere lengths to make histograms
-	pass the directory where the telomere length excel files (.xlsx) are located
+	This function opens custom Excel (.xlsx) files we use for 
+	quantifying raw telomere lengths, derived from ImageJ analyses.
+	The individual telomere lengths column is extracted, cleaned of NA values & DAPI-intensity values, 
+	outliers (3 std devs from mean of column) are removed, and the length values are standardized to 
+	each other according to discrepancies in the fluoresent intensity of the microscope, determined 
+	by Cy3 fluorescent bead measurements. The astronaut ID & sample's timepoint (from filename) is associated with 
+	the individual telo length column (for that excel file) as a KEY:VALUE pair in a dictionary.
+	The dictionary is looped over, initializing variables corresponding to astronaut sample timepoints,
+	and those variables are used to derive descriptive stats, and create histogram graphs.
 	"""
 
 	dict_mean_individ_telos_dfs = {}
