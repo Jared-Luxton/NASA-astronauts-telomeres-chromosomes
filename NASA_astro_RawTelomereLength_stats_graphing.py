@@ -8,13 +8,11 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 
 	dict_mean_individ_telos_dfs = {}
 
-#https://www.python.org/dev/peps/pep-0471/ .scandir() functionality
 	for file in os.scandir(patharg):
 		if file.name.endswith('.xlsx') and file.name.startswith('~$') == False:
 			print(file.name, 'IT WORKS PEGGY!!! <3')
 		
 			try:
-				# inpf = open(file, 'r')
 				df = pd.read_excel(file)
 
 			except:
@@ -62,7 +60,7 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 
 	for idNO in astro_list_of_IDs:
 
-	# 	#initialoze blank list of timepoints
+	# 	#initialize blank list of timepoints
 		astro_list_by_timepoint = []
 		data = [[1, 0, 0, 0], [0]]
 		emptydata = pd.DataFrame(data)
@@ -92,8 +90,6 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 	# 		#loop through timepoints
 		for j in timepointSeries:
 			for i in dict_mean_individ_telos_dfs.keys():
-	# 			#if the current astronaut ID is in this key and the timepoint is L-270, then
-	# 			#enter the astronauts L270
 				if (idNO in i) and j == 'L-270' and ('L-270' in i):
 					astro_L270 = dict_mean_individ_telos_dfs[i]
 					astro_list_by_timepoint.append(i)
@@ -222,13 +218,6 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 
 
 
-				# astro_var_list = [astro_L270, astro_L180, astro_Mid1, astro_Mid2, astro_R180, astro_R270]
-
-				# for x in astro_var_list:
-				# 	if x.size > 25:
-				# 		print(stats.kstest(x, 'norm'))
-
-
 
 
 				n_bins = 60
@@ -333,27 +322,6 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 			
 
 
-			# if astro_L270name != '': 
-			# 	if astro_R270name != '':
-			# 		# def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone, axsNUMtwo):
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_L270, astro_L270array, astro_L270name, 0)
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_R270, astro_L270array, astro_R270name, 1)
-			# 	elif astro_R270name == '':
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_L270, astro_L270array, astro_L270name, 0)
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_R180, astro_L270array, astro_R180name, 1)
-
-			# elif astro_L270name == '':
-			# 	if astro_R270name == '':
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_L180, astro_L180array, astro_L180name, 0)
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_R270, astro_L180array, astro_R180name, 1)
-			# 	elif astro_R270name != '':
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_L180, astro_L180array, astro_L180name, 0)
-			# 		astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astro_R270, astro_L180array, astro_R270name, 1)
-
-			# else:
-			# 	continue
-
-			# plt.show()
 
 def statistics_between_timepoints(astro_pre, astro_mid1, astro_mid2, astro_post, 
 	astro_prename, astro_mid1name, astro_mid2name, astro_postname):
@@ -441,14 +409,9 @@ def find_max_count(astro_df1, astro_df2):
 	astrolist = [astro_df1.size, astro_df2.size]
 	return max(astrolist)
 
-#for astros to get max counts from initial df do column 3 with a range of 30cellx184telos per cell 1 - 5520 max telos for 30 cells
-#for prostate cancer its 50cells x 92 telos per cell 1 - 4600 max telos for 50 cofish'd cells 
-
 
 
 def make_missingValue_array_based_on_difference(n_cells, telosPercell, astro_df):
-	#if wanted to do for max. possible telomeres, just replace the subtraction with max telos
-	# print('substracts second astro from first.. equalizing second to first')
 
 	missing_data_difference = abs( (n_cells * telosPercell) - astro_df.size )
 	range1 = np.arange(missing_data_difference)
@@ -464,8 +427,6 @@ def make_missingValue_array_based_on_difference(n_cells, telosPercell, astro_df)
 
 
 def gen_missing_values_andimpute_or_randomsampledown(n_cells, telosPercell, astro_df, option=None):
-	#if wanted to do for max. possible telomeres, just replace the subtraction with max telos
-	# print('substracts second astro from first.. equalizing second to first')
 
 	if astro_df.size > 5520:
 		astro_dfsampled = astro_df.sample(5520)
@@ -483,11 +444,9 @@ def gen_missing_values_andimpute_or_randomsampledown(n_cells, telosPercell, astr
 
 		if option == 'rsamp':
 			rsampled = astro_df.sample(missing_data_difference, random_state=28)
-			# print(rsampled, rsampled.shape)
 			concat_ed = pd.concat([rsampled, astro_df], sort=False)
 
 			np.random.shuffle(concat_ed.to_numpy())
-			# print(rsampled.shape, astro_df.shape, concat_ed.shape, 'rsamp', astro_df.describe(), pd.DataFrame(concat_ed).describe())
 			return concat_ed
 
 		elif option == 'kNN':
@@ -503,7 +462,6 @@ def gen_missing_values_andimpute_or_randomsampledown(n_cells, telosPercell, astr
 			x = x.reshape(5520,1)
 			x = pd.DataFrame(x)
 
-			# print(missingd.shape, astro_df.shape, x.shape, 'kNN', astro_df.describe(), pd.DataFrame(x).describe())
 			return x
 
 		else:
@@ -513,259 +471,6 @@ def gen_missing_values_andimpute_or_randomsampledown(n_cells, telosPercell, astr
 		return astro_df
 
 
-
-
-
-		# N, bins, patches = axs[0,0].hist(astro_L270array, bins=n_bins, range=(0, 400), edgecolor='black')
-
-		# for a in range(len(patches) - 1):
-		# 	if bins[a] <= np.quantile(astro_L270array, 0.25):
-		# 		patches[a].set_facecolor('#fdff38')
-
-		# 	elif np.quantile(astro_L270array, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.50):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif np.quantile(astro_L270array, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.75):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif bins[a] > np.quantile(astro_L270array, 0.75): 
-		# 		patches[a].set_facecolor('#ffbacd')
-
-		# axs[0,0].set_title('Histogram of ' + astro_L270name + 's Telomeres')
-		# axs[0,0].set_xlabel('Bins of Individ. Telomeres')
-		# axs[0,0].set_ylabel('Freqs of Individ. Telomeres')
-		# axs[0,0].xaxis.set_major_locator(plt.MaxNLocator(12))
-
-	
-
-		# print(astro_Mid1name, 'hello mid1')
-		# astro_Mid1array = astro_Mid1.to_numpy()
-		# N, bins, patches = axs[0,1].hist(astro_Mid1array, bins=n_bins, range=(0, 400), edgecolor='black')
-	
-		# for a in range(len(patches) - 1):
-		# 	if bins[a] <= np.quantile(astro_L270array, 0.25):
-		# 		patches[a].set_facecolor('#fdff38')
-
-		# 	elif np.quantile(astro_L270array, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.50):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif np.quantile(astro_L270array, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.75):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif bins[a] > np.quantile(astro_L270array, 0.75): 
-		# 		patches[a].set_facecolor('#ffbacd')
-
-		# axs[0,1].set_title('Histogram of ' + astro_Mid1name + 's Telomeres')
-		# axs[0,1].set_xlabel('Bins of Individ. Telomeres')
-		# axs[0,1].set_ylabel('Freqs of Individ. Telomeres')
-		# axs[0,1].xaxis.set_major_locator(plt.MaxNLocator(12))
-
-		# print(astro_Mid2name, 'hello mid2')
-		# astro_Mid2array = astro_Mid2.to_numpy()
-		# N, bins, patches = axs[1,0].hist(astro_Mid2array, bins=n_bins, range=(0, 400), edgecolor='black')
-
-		# for a in range(len(patches) - 1):
-		# 	if bins[a] <= np.quantile(astro_L270array, 0.25):
-		# 		patches[a].set_facecolor('#fdff38')
-
-		# 	elif np.quantile(astro_L270array, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.50):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif np.quantile(astro_L270array, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.75):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif bins[a] > np.quantile(astro_L270array, 0.75): 
-		# 		patches[a].set_facecolor('#ffbacd')
-
-		# axs[1,0].set_title('Histogram of ' + astro_Mid2name + 's Telomeres')
-		# axs[1,0].set_xlabel('Bins of Individ. Telomeres')
-		# axs[1,0].set_ylabel('Freqs of Individ. Telomeres')
-		# axs[1,0].xaxis.set_major_locator(plt.MaxNLocator(12))
-
-		# print(astro_R180name, 'hello r180')
-		# astro_R180array = astro_R180.to_numpy()
-		# N, bins, patches = axs[1,1].hist(astro_R180array, bins=n_bins, range=(0, 400), edgecolor='black')
-
-		# for a in range(len(patches) - 1):
-		# 	if bins[a] <= np.quantile(astro_L270array, 0.25):
-		# 		patches[a].set_facecolor('#fdff38')
-
-		# 	elif np.quantile(astro_L270array, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.50):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif np.quantile(astro_L270array, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270array, 0.75):
-		# 		patches[a].set_facecolor('#d0fefe')
-
-		# 	elif bins[a] > np.quantile(astro_L270array, 0.75): 
-		# 		patches[a].set_facecolor('#ffbacd')
-
-		# axs[1,1].set_title('Histogram of ' + astro_R180name + 's Telomeres')
-		# axs[1,1].set_xlabel('Bins of Individ. Telomeres')
-		# axs[1,1].set_ylabel('Freqs of Individ. Telomeres')
-		# axs[1,1].xaxis.set_major_locator(plt.MaxNLocator(12))
-
-
-
-		
-
-
-################################
-
-
-
-	# n_bins = 120
-	# fig, axs = plt.subplots(3, sharey=True, tight_layout=True, figsize = (12.8, 9.6))
-
-
-	# frames = [astro_L270, astro_L180]
-	# astro_L270_L180_combined = pd.concat(frames)
-	# astro_L270_L180_combinedarray = astro_L270_L180_combined.to_numpy()
-
-	# N, bins, patches = axs[0].hist(astro_L270_L180_combinedarray, bins=n_bins, range=(0, 400), edgecolor='black')
-
-	# for a in range(len(patches) - 1):
-	# 	if bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.25):
-	# 		patches[a].set_facecolor('#fdff38')
-
-	# 	elif np.quantile(astro_L270_L180_combinedarray, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.50):
-	# 		patches[a].set_facecolor('#d0fefe')
-
-	# 	elif np.quantile(astro_L270_L180_combinedarray, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.75):
-	# 		patches[a].set_facecolor('#d0fefe')
-
-	# 	elif bins[a] > np.quantile(astro_L270_L180_combinedarray, 0.75): 
-	# 		patches[a].set_facecolor('#ffbacd')
-
-	# axs[0].set_title('Histogram of ' + 'Astro 5163 L270 + L180 Combined' + 's Telomeres')
-	# axs[0].set_xlabel('Bins of Individ. Telomeres')
-	# axs[0].set_ylabel('Freqs of Individ. Telomeres')
-	# axs[0].xaxis.set_major_locator(plt.MaxNLocator(19))
-
-
-	# frames = [astro_Mid1, astro_Mid2]
-	# astro_Mid1_Mid2_combined = pd.concat(frames)
-	# astro_Mid1_Mid2_combinedarray = astro_Mid1_Mid2_combined.to_numpy()
-
-	# N, bins, patches = axs[1].hist(astro_Mid1_Mid2_combinedarray, bins=n_bins, range=(0, 400), edgecolor='black')
-
-	# for a in range(len(patches) - 1):
-	# 	if bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.25):
-	# 		patches[a].set_facecolor('#fdff38')
-
-	# 	elif np.quantile(astro_L270_L180_combinedarray, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.50):
-	# 		patches[a].set_facecolor('#d0fefe')
-
-	# 	elif np.quantile(astro_L270_L180_combinedarray, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.75):
-	# 		patches[a].set_facecolor('#d0fefe')
-
-	# 	elif bins[a] > np.quantile(astro_L270_L180_combinedarray, 0.75): 
-	# 		patches[a].set_facecolor('#ffbacd')
-
-	# axs[1].set_title('Histogram of ' + 'Astro 5163 Mid1 + Mid2 Combined' + 's Telomeres')
-	# axs[1].set_xlabel('Bins of Individ. Telomeres')
-	# axs[1].set_ylabel('Freqs of Individ. Telomeres')
-	# axs[1].xaxis.set_major_locator(plt.MaxNLocator(19))
-
-
-	# frames = [astro_R60, astro_R180]
-	# astro_R60_R180_combined = pd.concat(frames)
-	# astro_R60_R180_combinedarray = astro_R60_R180_combined.to_numpy()
-
-	# N, bins, patches = axs[2].hist(astro_R60_R180_combinedarray, bins=n_bins, range=(0, 400), edgecolor='black')
-
-	# for a in range(len(patches) - 1):
-	# 	if bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.25):
-	# 		patches[a].set_facecolor('#fdff38')
-
-	# 	elif np.quantile(astro_L270_L180_combinedarray, 0.25) < bins[a] and bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.50):
-	# 		patches[a].set_facecolor('#d0fefe')
-
-	# 	elif np.quantile(astro_L270_L180_combinedarray, 0.50) < bins[a] and bins[a] <= np.quantile(astro_L270_L180_combinedarray, 0.75):
-	# 		patches[a].set_facecolor('#d0fefe')
-
-	# 	elif bins[a] > np.quantile(astro_L270_L180_combinedarray, 0.75): 
-	# 		patches[a].set_facecolor('#ffbacd')
-
-	# axs[2].set_title('Histogram of ' + 'Astro 5163 R60 + R180 Combined' + 'Telomeres')
-	# axs[2].set_xlabel('Bins of Individ. Telomeres')
-	# axs[2].set_ylabel('Freqs of Individ. Telomeres')
-	# axs[2].xaxis.set_major_locator(plt.MaxNLocator(19))
-
-
-	# print('K-S test of ' + 'astro L 270 + L180' + ' and ' + 'Mid 1 + Mid2', stats.ks_2samp(astro_L270_L180_combinedarray.flatten(), astro_Mid1_Mid2_combinedarray.flatten()))
-
-	# print('K-S test of ' + 'astro L 270 + L180' + ' and ' + 'R60 + R180', stats.ks_2samp(astro_L270_L180_combinedarray.flatten(), astro_R60_R180_combinedarray.flatten()))
-
-	# print('K-S test of ' + 'astro Mid1 + Mid2 ' + ' and ' + 'R60 + R180', stats.ks_2samp(astro_Mid1_Mid2_combinedarray.flatten(), astro_R60_R180_combinedarray.flatten()))
-	
-	
-
-	# plt.show()
-
-		# figsize=(12.8, 9.6))
-
-				# SW_Barray = SW_B.to_numpy()
-				# N, bins, patches = axs[1, 0].hist(SW_Barray, bins=n_bins, range=(0, 400), edgecolor='black')
-
-			
-				# for a in range(len(patches) - 1):
-				# 	if bins[a] <= np.quantile(SW_A_nonRADarray, 0.25):
-				# 		patches[a].set_facecolor('#fdff38')
-
-				# 	elif np.quantile(SW_A_nonRADarray, 0.25) < bins[a] and bins[a] <= np.quantile(SW_A_nonRADarray, 0.50):
-				# 		patches[a].set_facecolor('#d0fefe')
-
-				# 	elif np.quantile(SW_A_nonRADarray, 0.50) < bins[a] and bins[a] <= np.quantile(SW_A_nonRADarray, 0.75):
-				# 		patches[a].set_facecolor('#d0fefe')
-
-				# 	elif bins[a] > np.quantile(SW_A_nonRADarray, 0.75): 
-				# 		patches[a].set_facecolor('#ffbacd')
-
-				# axs[1, 0].set_title('Histogram of ' + i4a + 's Telomeres')
-				# axs[1, 0].set_xlabel('Bins of Individ. Telomeres')
-				# axs[1, 0].set_ylabel('Freqs of Individ. Telomeres')
-				# axs[1, 0].xaxis.set_major_locator(plt.MaxNLocator(12))
-				
-
-
-				# SW_Carray = SW_C.to_numpy()
-				# N, bins, patches = axs[1, 1].hist(SW_Carray, bins=n_bins, range=(0, 400), edgecolor='black')
-
-				
-				# for a in range(len(patches) - 1):
-				# 	if bins[a] <= np.quantile(SW_A_nonRADarray, 0.25):
-				# 		patches[a].set_facecolor('#fdff38')
-
-				# 	elif np.quantile(SW_A_nonRADarray, 0.25) < bins[a] and bins[a] <= np.quantile(SW_A_nonRADarray, 0.50):
-				# 		patches[a].set_facecolor('#d0fefe')
-
-				# 	elif np.quantile(SW_A_nonRADarray, 0.50) < bins[a] and bins[a] <= np.quantile(SW_A_nonRADarray, 0.75):
-				# 		patches[a].set_facecolor('#d0fefe')
-
-				# 	elif bins[a] > np.quantile(SW_A_nonRADarray, 0.75): 
-				# 		patches[a].set_facecolor('#ffbacd')
-
-				# axs[1, 1].set_title('Histogram of ' + i5 + 's Telomeres')
-				# axs[1, 1].set_xlabel('Bins of Individ. Telomeres')
-				# axs[1, 1].set_ylabel('Freqs of Individ. Telomeres')
-				# axs[1, 1].xaxis.set_major_locator(plt.MaxNLocator(12))
-				
-			
-
-				# https://statmodeling.stat.columbia.edu/2016/06/17/29400/
-				# argument against stats on binned data...
-
-				# print('K-S test of ' + i + ' and ' + i, stats.ks_2samp(SW_A_nonRADarray.flatten(), SW_A_nonRADarray.flatten()))
-
-				# print('K-S test of ' + i2 + ' and ' + i2, stats.ks_2samp(SW_A_nonRADarray.flatten(), SW_A_irrad4Gyarray.flatten()))
-
-				# print('K-S test of ' + i4a + ' and ' + i4a, stats.ks_2samp(SW_A_nonRADarray.flatten(), SW_Barray.flatten()))
-
-				# print('K-S test of ' + i5 + ' and ' + i5, stats.ks_2samp(SW_A_nonRADarray.flatten(), SW_Carray.flatten()))
-
-				#need to make a dict of individual cell means to do the t-test 
-
-# python prostate\ cancer\ script\ progress\ ver4_14_19_makesSubplots_stats.py ../prostate\ cancer\ IMRT\ excel\ sheets\ copy\ testing
 
 
 
