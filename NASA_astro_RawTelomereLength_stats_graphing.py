@@ -1,7 +1,12 @@
 def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 
 	"""
-	This function opens custom Excel (.xlsx) files we use for 
+	USAGE:
+	From the command line, call the name of this entire script file, and pass an argument
+	for the location (directory) containing the Excel files to analyze, i.e
+	$ python Name_Of_This_Script directory/containing/excelfiles/to/analyze
+	
+	This is the main function for this script, which opens custom Excel (.xlsx) files we use for 
 	quantifying raw telomere lengths, derived from ImageJ analyses.
 	The individual telomere lengths column is extracted, cleaned of NA values & DAPI-intensity values, 
 	outliers (3 std devs from mean of column) are removed, and the length values are standardized to 
@@ -500,9 +505,6 @@ if __name__ == '__main__':
 	from missingpy import KNNImputer
 
 	from statsmodels.graphics.gofplots import qqplot
-	
-
-
 
 	patharg = sys.argv[1]
 	generate_histograms_and_dataframes_forTeloLengthData(patharg)
