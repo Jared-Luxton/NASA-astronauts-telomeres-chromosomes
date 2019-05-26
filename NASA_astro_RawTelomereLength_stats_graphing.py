@@ -157,9 +157,7 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
 						astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid1, astro_L270array, astro_Mid1name, 0, 1)
 						astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid2, astro_L270array, astro_Mid2name, 1, 0)
 						astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_R270, astro_L270array, astro_R270name, 1, 1)
-						# statistics_between_timepoints(astro_pre, astro_mid1=None, astro_mid2=None, astro_post, 
-						# 			  astro_prename, astro_mid1name=None, astro_mid2name=None, astro_postname)
-
+						
 						statistics_between_timepoints(astro_L270, astro_Mid1, astro_Mid2, astro_R270, 
 									  astro_L270name, astro_Mid1name, astro_Mid2name, astro_R270name)
 
