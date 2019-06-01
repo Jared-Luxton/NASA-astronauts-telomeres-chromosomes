@@ -1,3 +1,4 @@
-# NASA-astronauts-telomeres-chromosomes
+# Analyzing the Effects of Space Flight on NASA Astronauts 
+# using Telomeres and Chromosome Rearrangements
 
-In progress 5/25/19 
+In progress 6/1/19 
