@@ -9,8 +9,6 @@ In progress 6/1/19
 [Background](#background)
 
 
- 
-<a name="background"/>
 # Background
 
 
