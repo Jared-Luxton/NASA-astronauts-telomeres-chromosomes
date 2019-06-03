@@ -1,6 +1,8 @@
 # Analyzing the Effects of Space Flight on Telomere Length Dynamics in NASA Astronauts
 
-In progress 6/1/19 
+In progress 6/2/19 
+
+
 
 
 
@@ -12,15 +14,21 @@ In progress 6/1/19
 * [Data Analysis](#data-analysis)
 
 
+
+
+
+
+
+
+
+
+
+
+
 ## Background
 ## Approach
 ## Cleaning Data
 ## Data Analysis
 
 
-##### Table of Contents  
-[Headers](#headers)  
-[Emphasis](#emphasis)  
-...snip...    
-<a name="headers"/>
-## Headers
+
