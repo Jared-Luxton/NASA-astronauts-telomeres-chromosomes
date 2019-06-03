@@ -6,7 +6,7 @@ In progress 6/1/19
 
 
 #### Table of Contents:
-.....*[Background](#background)
+...[Background](#background)
 
 
 ## Background
