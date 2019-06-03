@@ -6,7 +6,10 @@ In progress 6/1/19
 
 
 #### Table of Contents:
-...[Background](#background)
+* [Background](#background)
+* [Approach](#approach)
+* [Cleaning Data](#cleaning-data)
+* [Data Analysis](#data-analysis)
 
 
 ## Background
