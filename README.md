@@ -5,7 +5,7 @@ In progress 6/1/19
 
 
 
-#### Table of Contents:
+### Table of Contents:
 * [Background](#background)
 * [Approach](#approach)
 * [Cleaning Data](#cleaning-data)
@@ -13,6 +13,9 @@ In progress 6/1/19
 
 
 ## Background
+## Approach
+## Cleaning Data
+## Data Analysis
 
 
 ##### Table of Contents  
