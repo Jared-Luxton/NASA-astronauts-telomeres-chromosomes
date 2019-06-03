@@ -9,7 +9,7 @@ In progress 6/1/19
 [Background](#background)
 
 
-# Background
+## Background
 
 
 ##### Table of Contents  
