@@ -24,7 +24,6 @@ jLuxton@colostate.edu
 * [Data Analysis: Visualization and Statistics](#data-analysis)
 * [Conclusions](#conclusions)
 
-&nbsp;  
 &nbsp;    
 
 ## Background 
