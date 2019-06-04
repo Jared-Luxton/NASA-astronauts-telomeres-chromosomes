@@ -9,7 +9,11 @@ This repository details: the context of my research in the wider pursuit of spac
 Jared Luxton  
 jLuxton@colostate.edu
 
-<a href="url"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/200px-Python-logo-notext.svg.png" align="left" height="100"></a>
+<a href="url">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/200px-Python-logo-notext.svg.png" height="150"> 
+<img src="https://cdn1.medicalnewstoday.com/content/images/articles/319/319971/space-explorer.jpg" height="150">
+<img src="https://abm-website-assets.s3.amazonaws.com/rdmag.com/s3fs-public/embedded_image/2017/04/telomere-chromosome-stock.jpg" height="150">
+</a>
 
   
 ### Table of Contents:
