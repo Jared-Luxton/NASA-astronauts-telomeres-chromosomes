@@ -14,15 +14,17 @@ jLuxton@colostate.edu
 <img src="https://abm-website-assets.s3.amazonaws.com/rdmag.com/s3fs-public/embedded_image/2017/04/telomere-chromosome-stock.jpg" height="150">
 </a>
 
-### Table of Contents:
+## Table of Contents:
 * [Background](#background)
 * [Approach](#approach)
 * [Cleaning Data](#cleaning-data)
 * [Data Analysis](#data-analysis)
+* [Conclusions](#conclusions)
 
 
 
-## Background
-## Approach
-## Cleaning Data
-## Data Analysis
+## Background: Ascertaining Risks of Space Flight
+## Approach: Measurements of Telomere Length from Blood
+## Cleaning Data: Handling Telomere Length Data
+## Data Analysis: Visualization and Statistics
+## Conclusions
