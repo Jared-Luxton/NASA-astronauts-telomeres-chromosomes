@@ -15,8 +15,7 @@ jLuxton@colostate.edu
 </a>
 
 &nbsp;
-&nbsp;  
-&nbsp;  
+&nbsp;   
 
 ## Table of Contents:
 * [Background](#background)
@@ -26,8 +25,7 @@ jLuxton@colostate.edu
 * [Conclusions](#conclusions)
 
 &nbsp;  
-&nbsp;  
-&nbsp;  
+&nbsp;    
 
 ## Background: Quantifying Risks of Space Flight
 ## Approach: Measuring Telomere Length Dynamics
