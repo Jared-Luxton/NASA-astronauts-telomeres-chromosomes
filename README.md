@@ -2,7 +2,7 @@
   
 Space remains a great frontier for humanity, with an array of dangers to human health. As part of my Ph.D, I'm researching how spaceflight impacts human health. Specifically, I examine time aboard the International Space Station affects telomeres, the structural ends of human DNA, in the blood of NASA's astronauts. My research takes the *first look at the changes to telomeres in unrelated astronauts as a result of spaceflight*, informing NASA policies on future manned missions.
 
-This repository details the context of my research in the wider pursuit of space exploration; a brief overview of my laboratory methods; and an extensive walkthrough of my analysis using Python on telomere length data in astronauts. This repository may serve as an accessory to our upcoming publications.
+This repository details the context of my research in the wider pursuit of space exploration; a brief overview of my laboratory methods; and an extensive walkthrough of my analysis using Python on telomere length data in astronauts. This repository may serve as an accessory to our upcoming publications. The walkthrough below is intended for those more interested in the science and less in the code. For those more interested in the code as well, please see the JupyterNotebook file above. 
 
 **Contact:**  
 Jared Luxton  
@@ -30,6 +30,7 @@ jLuxton@colostate.edu
 
 ## Background 
 **Health Risks and Obstacles to Space Flight**
+In recent decades, the possibility of extended manned explorations of space, permanent lunar bases, and even human colonies on other planets in our solar system, ala Mars, have become more technologically feasible and amazingly, close to realization.  
 
 &nbsp; 
 
