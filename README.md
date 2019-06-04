@@ -18,10 +18,10 @@ jLuxton@colostate.edu
 &nbsp;   
 
 ## Table of Contents:
-* [Background](#background)
-* [Approach](#approach)
-* [Cleaning Data](#cleaning-data)
-* [Data Analysis](#data-analysis)
+* [Background](#background:-quantifying-risks-of-space-flight)
+* [Approach](#approach:-measuring-telomere-length-dynamics)
+* [Cleaning Data](#cleaning-data:-handling-telomere-length-data)
+* [Data Analysis](#data-analysis:-visualization-and-statistics)
 * [Conclusions](#conclusions)
 
 &nbsp;  
