@@ -9,16 +9,8 @@ This repository details: the context of my research in the wider pursuit of spac
 Jared Luxton  
 jLuxton@colostate.edu
 
-https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/200px-Python-logo-notext.svg.png
-https://s3.amazonaws.com/iexplore_web/images/assets/000/006/572/original/space_travel.jpg?1443785354
-https://abm-website-assets.s3.amazonaws.com/rdmag.com/s3fs-public/embedded_image/2017/04/telomere-chromosome-stock.jpg
 
-<p float="left">
-  <img src="/https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/200px-Python-logo-notext.svg.png" width="100" />
-  <img src="/https://s3.amazonaws.com/iexplore_web/images/assets/000/006/572/original/space_travel.jpg?1443785354" width="100" /> 
-  <img src="/https://abm-website-assets.s3.amazonaws.com/rdmag.com/s3fs-public/embedded_image/2017/04/telomere-chromosome-stock.jpg" width="100" />
-<p align="middle">
-</p>
+![alt text](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/200px-Python-logo-notext.svg.png "Logo Title Text 1")![alt text](https://s3.amazonaws.com/iexplore_web/images/assets/000/006/572/original/space_travel.jpg?1443785354 "Logo Title Text 1")![alt text](https://abm-website-assets.s3.amazonaws.com/rdmag.com/s3fs-public/embedded_image/2017/04/telomere-chromosome-stock.jpg "Logo Title Text 1")
 
 ### Table of Contents:
 * [Background](#background)
