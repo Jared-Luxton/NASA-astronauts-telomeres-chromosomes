@@ -18,17 +18,17 @@ jLuxton@colostate.edu
 &nbsp;   
 
 ## Table of Contents:
-* [Background](#background)
-* [Approach](#approach)
-* [Data Cleaning](#data-cleaning)
-* [Data Analysis](#data-analysis)
+* [Background: Ascertaining Risks of Space Flight](#background) 
+* [Approach: Measuring Telomere Length Dynamics](#approach)
+* [Data Cleaning: Handling Telomere Length Data](#data-cleaning)
+* [Data Analysis: Visualization and Statistics](#data-analysis)
 * [Conclusions](#conclusions)
 
 &nbsp;  
 &nbsp;    
 
 ## Background 
-**Quantifying Risks of Space Flight**
+**Ascertaining Risks of Space Flight**
 
 &nbsp; 
 
