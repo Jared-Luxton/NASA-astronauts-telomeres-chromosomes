@@ -2,8 +2,7 @@
 
 In progress 6/2/19 
 
-
-
+Space remains a great frontier for humanity, with an array of dangers to human health. As part of my Ph.D research, I'm seeking to understand how spaceflight affects human health. I answer these questions from the perspective of telomeres, the structural ends of human DNA. This repository details the context of my research, 
 
 
 
