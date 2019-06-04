@@ -18,8 +18,9 @@ jLuxton@colostate.edu
 &nbsp;   
 
 ## Table of Contents:
-* [Background: Ascertaining Risks of Space Flight](#background) 
-* [Approach: Measuring Telomere Length Dynamics](#approach)
+* [Background: Health Risks and Obstacles to Space Flight](#background) 
+* [Approach: Identifying Risks by Measuring Telomere Lengths](#approach)
+* [Methods: Blood Collections, Cell Culture, Telomere Measurements](#methods)
 * [Data Cleaning: Handling Telomere Length Data](#data-cleaning)
 * [Data Analysis: Visualization and Statistics](#data-analysis)
 * [Conclusions](#conclusions)
@@ -27,12 +28,17 @@ jLuxton@colostate.edu
 &nbsp;    
 
 ## Background 
-**Ascertaining Risks of Space Flight**
+**Health Risks and Obstacles to Space Flight**
 
 &nbsp; 
 
 ## Approach 
-**Measuring Telomere Length Dynamics**
+**Identifying Risks by Measuring Telomere Lengths**
+
+&nbsp; 
+
+## Methods
+**Blood Collections, Cell Culture, Telomere Measurements**
 
 &nbsp; 
 
