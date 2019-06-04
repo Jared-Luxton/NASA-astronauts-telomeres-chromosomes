@@ -5,7 +5,7 @@ Space remains a great frontier for humanity, with an array of dangers to human h
 This repository details: the context of my research in the wider pursuit of space exploration, a brief overview of my laboratory methods, and an extensive walkthrough of my analyses in Python on telomere length data in astronauts. This repository may serve as an accessory to my lab's upcoming publications on the effects of spaceflight in unrelated astronauts.
 
 **Contact:** 
-Jared James Luxton 
+Jared Luxton 
 jLuxton@colostate.edu
 
 
