@@ -30,25 +30,23 @@ jLuxton@colostate.edu
 
 ## Background 
 **Health Risks and Obstacles to Space Flight**\
-Did you know that NASA is sending humans to the Moon in 2024? Not only that, this mission is the first of many that will develop permanent lunar colonies. Dubbed Artemis, the NASA project entails sending the *first* woman (and another man) to the lunar surface and the development of a *permanent lunar outpost called the Gateway* orbiting the Moon. The objectives undertaken by Artemis are part of NASA's overarching goal (and humanity's common dream) for humans to explore our solar system, including Mars and beyond. 
+Did you know that NASA is sending humans to the Moon in 2024? Yes! And not only that: this mission is the first of many that will develop permanent lunar colonies and provide a bridge to exploring Mars and beyond. Dubbed Artemis, this NASA project entails sending the *first* woman (and another man) to the lunar surface and the development of a *permanent lunar outpost called the Gateway* orbiting the Moon. The objectives undertaken by Artemis are part of NASA's overarching goal (and humanity's common dream) for humans to explore our solar system, including Mars and beyond. 
 
-The immediate challenges facing Artemis are substantial in terms of technology and health considerations for the astronauts. Even as we approach Project Artemis in 2024 and beyond, the short- and long-term health effects of spaceflight, especially those from chronic exposure to galactic cosmic rays, a type of radiation unique to space and not found on Earth, remain relatively unknown. Galactic cosmic rays (GCRs) are highly energetic particles hurtling through space at nearly the speed of light. Though a rare event, when GCRs strike human cells they shred all cellular contents in their path, including DNA. This damage accumulates over time, and could lead to degen..
-
-process of cellular damage by GCRs is iterative, and over time could lead to tissue degeneration and/or cancer. At this time we simply don't understand how much cellular damage is accumulated for humans in space, and how it influences cancer risk. Not understanding these key issues makes addressing them impossible. These essential topics are addressed by my research on telomeres (the ends of DNA) and DNA stability for NASA astronauts aboard the International Space Station.
-
-Telomeres are repetitive sequences of DNA encapsulated by protein and RNA found at the ends of chromosomes.
+The immediate challenges facing Artemis are substantial in terms of technology and health considerations for the astronauts. Even as we approach Project Artemis in 2024, the short- and long-term health effects of spaceflight, especially those from chronic exposure to galactic cosmic rays, a type of radiation unique to space and not found on Earth, remain relatively unknown. Galactic cosmic rays (GCRs) are highly energetic particles hurtling through space at nearly the speed of light. Though a rare event, when GCRs strike human cells they shred all cellular contents in their path, including DNA. This damage accumulates over time, and could lead to degeneration of tissues and cancer. Currently, we simply don't understand how much cellular damage humans accumulate in space, and how much it increases cancer risk. Not understanding these issues makes addressing them impossible. My research directly addresses these issues by examing how spaceflight effects telomeres (the ends of DNA) and DNA stability for NASA astronauts aboard the International Space Station. 
 
 &nbsp; 
 
 ## Approach 
 **Identifying Risks by Measuring Telomere Lengths**\
-...
+Telomeres are repetitive sequences of DNA covered by protein found at the very ends of DNA. Telomeres shorten with each cell division and thus shorten as we age. When the telomeres in a cell reach a critically short length, the cell will die or persist in a state which damages neighboring cells (termed senescence). Cell death resulting from telomeres shortening too quickly will lead to age-related diseases, i.e cancer.  Environmental exposures, including space radiation, air pollution, stress, inflammation, and others can all contribute to telomere shortening and thus age-related diseases - cancer. Telomeres therefore link environmental exposures with age-related diseases. By measuring telomere length over a period of time which involves environmental stressors and exposures, telomeres can be used to quantify the short and long term effects of that experience in terms of cancer risk. This is what we've done with the astronauts.
+
+We monitored the telomere lengths in 11 unrelated astronauts at pre-, mid-, and post-spaceflight timepoints aboard the International Space Station (where available). In all, we have telomere data for about seven timepoint samples for each astronaut. For our analyses, we directly monitored the lengths of *all individual telomeres* in each cell for each timepoint for each patient; we also have the telomere length means for those timepoints.
 
 &nbsp; 
 
 ## Methods
 **Blood Collections, Cell Culture, Telomere Measurements**\
-...
+To measure telomere length in astronauts, we used a noninvasive approach for sample collection and analysis. Blood was taken from astronauts at pre-, mid- (yes, blood was drawn aboard the International Space Station, sent down on the Soyuz capsule to Texas, and mailed to us), and post-spaceflight timepoints. From this blood we cultured white blood cells (ala 'T-cells'). White blood cells formed the essential basis for our telomere length measurements. 
 
 &nbsp; 
 
