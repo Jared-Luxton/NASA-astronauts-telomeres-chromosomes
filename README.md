@@ -30,7 +30,7 @@ jLuxton@colostate.edu
 
 ## Background 
 **Health Risks and Obstacles to Space Flight**\
-Did you know that NASA is sending humans to the Moon in 2024? Yes! And not only that: this mission is the first of many that will develop permanent lunar colonies and provide a bridge to exploring Mars and beyond. Dubbed Artemis, this NASA project entails sending the *first* woman (and another man) to the lunar surface and the development of a *permanent lunar outpost called the Gateway* orbiting the Moon. The objectives undertaken by Artemis are part of NASA's overarching goal (and humanity's common dream) for humans to explore our solar system, including Mars and beyond. 
+Did you know that NASA is sending humans to the Moon in 2024? Yes! And not only that: this mission is the first of many that will develop permanent lunar colonies and provide a bridge to exploring Mars and beyond. Dubbed Artemis, this NASA project entails sending the *first* woman (and another man) to the lunar surface and the development of a *permanent lunar outpost called the Gateway* orbiting the Moon. The objectives undertaken by Artemis are part of NASA's overarching goal (and humanity's common dream) for humans to explore our solar system; Mars and beyond. 
 
 The immediate challenges facing Artemis are substantial in terms of technology and health considerations for the astronauts. Even as we approach Project Artemis in 2024, the short- and long-term health effects of spaceflight, especially those from chronic exposure to galactic cosmic rays, a type of radiation unique to space and not found on Earth, remain relatively unknown. 
 
