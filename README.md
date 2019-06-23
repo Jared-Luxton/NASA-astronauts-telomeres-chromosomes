@@ -54,7 +54,7 @@ To measure telomere length in astronauts, we used a noninvasive approach for sam
 
 ## Data Cleaning 
 **Handling Telomere Length Data**\
-Here's what you've been waiting for. The Python good stuff. 
+Here's what you've been reading for. *The Python good stuff.* 
 ...
 
 &nbsp; 
