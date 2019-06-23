@@ -4,7 +4,7 @@ In 2024 NASA will execute Project Artemis, sending humans back to the moon to es
 
 This repository details the context of my research in the wider pursuit of space exploration; a brief overview of my laboratory methods; and an extensive walkthrough of my analysis using Python on telomere length data in astronauts. Why Python? The first pass of my analysis on the astronaut dataset was done in Excel and took ~1 month; my Python script takes about 30 seconds. This repository may serve as an accessory to our upcoming publications. The data analysis walkthrough is provided in a Jupyter notebook in this repository. A properly rendered version of this notebook is here, please use this one:  
   
-  [Analyzing the Effects of Space Flight on Telomere Length Dynamics in NASA Astronauts](https://nbviewer.jupyter.org/github/Jared-Luxton/NASA-astronauts-telomeres-chromosomes/blob/master/NASA-astros-telomeres-JupyterNotebook.ipynb#background). 
+  [Analyzing the Effects of Space Flight on Telomere Length Dynamics in NASA Astronauts](https://nbviewer.jupyter.org/github/Jared-Luxton/NASA-astronauts-telomeres-chromosomes/blob/master/NASA-astros-telomeres-JupyterNotebook.ipynb). 
 
 This analysis is intended for those interested in the code and/or science; jargon has been avoided wherever possible. Please feel free to contact me. 
 
