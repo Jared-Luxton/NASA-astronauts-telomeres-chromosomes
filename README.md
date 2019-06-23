@@ -48,12 +48,13 @@ Telomeres are repetitive sequences of DNA covered by protein found at the very e
 **Blood Collections, Cell Culture, Telomere Measurements**\
 We monitored the telomere lengths in 11 unrelated astronauts at pre-, mid-, and post-spaceflight timepoints aboard the International Space Station (where available). In all, we have telomere data for about seven timepoint samples for each astronaut. For our analyses, we directly monitored the lengths of *all individual telomeres* in each cell for each timepoint for each patient; we also have the telomere length means for those timepoints.
 
-To measure telomere length in astronauts, we used a noninvasive approach for sample collection and analysis. Blood was taken from astronauts at pre-, mid- (yes, blood was drawn aboard the International Space Station, sent down on the Soyuz capsule to Texas, and mailed to us), and post-spaceflight timepoints. From this blood we cultured white blood cells (ala 'T-cells'). White blood cells formed the essential basis for our telomere length measurements. 
+To measure telomere length in astronauts, we used a noninvasive approach for sample collection and analysis. Blood was taken from astronauts at pre-, mid- (yes, blood was drawn aboard the International Space Station, sent down on the Soyuz capsule to Texas, and mailed to us), and post-spaceflight timepoints. From this blood we specifically cultured white blood cells (ala 'T-cells'). By culturing and using only white blood cells for our telomere length measurements, we ensured the homogenity of our measurements. 
 
 &nbsp; 
 
 ## Data Cleaning 
 **Handling Telomere Length Data**\
+Here's what you've been waiting for. The Python good stuff. 
 ...
 
 &nbsp; 
