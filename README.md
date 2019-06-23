@@ -77,7 +77,9 @@ def generate_histograms_and_dataframes_forTeloLengthData(patharg):
             df.rename(columns={'Unnamed: 3':'Mean Individ Telos'}, inplace=True)
 
             mean_values_of_individual_telomere_lengths = (df['Mean Individ Telos'])
-            mean_values_of_individual_telomere_lengths = mean_values_of_individual_telomere_lengths.drop(labels=[5, 192, 379,             566, 753, 940, 1127, 1314, 1501, 1688, 1875, 2062, 2249, 2436, 2623, 2810, 2997, 3184, 3371, 3558, 3745, 3932,                 4119, 4306, 4493, 4680, 4867, 5054, 5241, 5428])
+            mean_values_of_individual_telomere_lengths = mean_values_of_individual_telomere_lengths.drop(labels=[5, 192, 379, 
+            566, 753, 940, 1127, 1314, 1501, 1688, 1875, 2062, 2249, 2436, 2623, 2810, 2997, 3184, 3371, 3558, 3745, 3932, 
+            4119, 4306, 4493, 4680, 4867, 5054, 5241, 5428])
             mean_values_of_individual_telomere_lengths = mean_values_of_individual_telomere_lengths.iloc[7:5611]
             meantelos_str_toNaN = pd.to_numeric(mean_values_of_individual_telomere_lengths, errors='coerce')
             mean_individual_telos_cleaned = meantelos_str_toNaN.dropna(axis=0, how='any')
