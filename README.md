@@ -6,7 +6,7 @@ This repository details the context of my research in the wider pursuit of space
   
   [Analyzing the Effects of Space Flight on Telomere Length Dynamics in NASA Astronauts](https://nbviewer.jupyter.org/github/Jared-Luxton/NASA-astronauts-telomeres-chromosomes/blob/master/NASA-astros-telomeres-JupyterNotebook.ipynb). 
 
-This analysis is intended for those interested in the code and/or science; jargon has been avoided wherever possible. Please enjoy! And feel free to contact me. 
+This analysis is intended for those interested in the code and/or science; jargon has been avoided wherever possible. Please enjoy! And, feel free to contact me. 
 
 **Contact:**  
 Jared Luxton  
