@@ -10,7 +10,8 @@ This analysis is intended for those interested in the code and/or science; jargo
 
 **Contact:**  
 Jared Luxton  
-jLuxton@colostate.edu
+jLuxton@colostate.edu  
+https://www.linkedin.com/in/jaredjamesluxton/
 
 <p align="center">
 <a href="url">
