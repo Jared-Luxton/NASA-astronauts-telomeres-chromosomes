@@ -367,6 +367,7 @@ def statistics_between_timepoints_prepost_only(astro_pre, astro_post, astro_pren
 def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone, axsNUMtwo):
 
         astroarray = astroDF.to_numpy()
+        # astroquartile = astroquartile.to_numpy()
 
         N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroarray, bins=n_bins, range=(0, 400), edgecolor='black')
 
