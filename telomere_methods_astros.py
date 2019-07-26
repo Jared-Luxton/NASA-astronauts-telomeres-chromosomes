@@ -449,10 +449,6 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
                 if astro_L270name != '': 
                     if astro_R270name != '':
                         
-#                         astro_L270name = f'synthetic astronaut {n} L-270'
-#                         astro_Mid1name = f'synthetic astronaut {n} Mid1'
-#                         astro_Mid2name = f'synthetic astronaut {n} Mid2'
-#                         astro_R270name = f'synthetic astronaut {n} R+270'
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_L270, astro_L270, astro_L270name, 0, 0)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid1, astro_L270, astro_Mid1name, 0, 1)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid2, astro_L270, astro_Mid2name, 1, 0)
@@ -463,10 +459,6 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
 
                     elif astro_R270name == '':
         
-#                         astro_L270name = f'synthetic astronaut {n} L-270'
-#                         astro_Mid1name = f'synthetic astronaut {n} Mid1'
-#                         astro_Mid2name = f'synthetic astronaut {n} Mid2'
-#                         astro_R180name = f'synthetic astronaut {n} R+180'
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_L270, astro_L270, astro_L270name, 0, 0)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid1, astro_L270, astro_Mid1name, 0, 1)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid2, astro_L270, astro_Mid2name, 1, 0)
@@ -478,10 +470,6 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
                 elif astro_L270name == '':
                     if astro_R270name == '':
                 
-#                         astro_L180name = f'synthetic astronaut {n} L-180'  
-#                         astro_Mid1name = f'synthetic astronaut {n} Mid1'
-#                         astro_Mid2name = f'synthetic astronaut {n} Mid2'
-#                         astro_R180name = f'synthetic astronaut {n} R+180'
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_L180, astro_L180, astro_L180name, 0, 0)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid1, astro_L180, astro_Mid1name, 0, 1)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid2, astro_L180, astro_Mid2name, 1, 0)
@@ -492,10 +480,7 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
 
                     elif astro_R270name != '':
         
-#                         astro_L180name = f'synthetic astronaut {n} L-180'  
-#                         astro_Mid1name = f'synthetic astronaut {n} Mid1'
-#                         astro_Mid2name = f'synthetic astronaut {n} Mid2'
-#                         astro_R270name = f'synthetic astronaut {n} R+270'
+
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_L180, astro_L180, astro_L180name, 0, 0)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid1, astro_L180, astro_Mid1name, 0, 1)
                         astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astro_Mid2, astro_L180, astro_Mid2name, 1, 0)
@@ -538,7 +523,7 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
         
         
         
-def grab_control_values_generate_histograms_and_dataframes_forTeloLengthData(patharg):
+def grab_control_values_generate_dictionary(patharg):
 
     """
 
@@ -551,7 +536,6 @@ def grab_control_values_generate_histograms_and_dataframes_forTeloLengthData(pat
             print(file.name, 'IT WORKS PEGGY!!! <3')
         
             try:
-                # inpf = open(file, 'r')
                 df = pd.read_excel(file)
 
             except:
@@ -592,115 +576,157 @@ def grab_control_values_generate_histograms_and_dataframes_forTeloLengthData(pat
 
             file_name_trimmed = file.name.replace('.xlsx', '')
             
-#             gen_missing_values_andimpute_or_randomsampledown(n_cells, 184, astro_L270, 'rsamp')
-            n_cells=30
             
-            dict_mean_individ_telos_dfs[file_name_trimmed] = gen_missing_values_andimpute_or_randomsampledown(n_cells, 184, mean_individ_df_cy3Cal, 'rsamp')
+            mean_individ_df_cy3Cal = gen_missing_values_andimpute_or_randomsampledown(30, 184, mean_individ_df_cy3Cal, 'rsamp')
+            
+            dict_mean_individ_telos_dfs[file_name_trimmed] = mean_individ_df_cy3Cal
 
-
-            # print(df.shape)
-            # outlier_removed = df[(np.abs(stats.zscore(df)) < 3).all(axis=1)]
-            # print(outlier_removed.shape)
-
-
-    list_of_IDs = ['0397', '3907', '1826', '2377', '3609', '1264', '2580', '4127', '0646', '0100', '0912']
-    timepointSeries = ['L-270', 'L-180', 'L-60', 'FD45', 'FD260', 'R+7', 'R+60', 'R+180', 'R+270']
-
-    ctrl_PreF = pd.DataFrame()
-    ctrl_PostF = pd.DataFrame()
-    ctrl_PreFname = ''
-    ctrl_PostFname = ''
-    ctrl_Total = pd.DataFrame()
+    print('data collection complete')
+    return dict_mean_individ_telos_dfs
 
 
 
-    for idNO in list_of_IDs:
+# def read_control_dictionary_testing(dict_mean_individ_telos_dfs):
+    
+#     list_of_IDs = ['0397', '3907', '1826', '2377', '3609', '1264', '2580', '4127', '0646', '0100', '0912']
+#     timepointSeries = ['L-270', 'L-180', 'L-60', 'FD45', 'FD260', 'R+7', 'R+60', 'R+180', 'R+270'
+    
+# #     ctrl_Total = pd.DataFrame()
+    
+#     copy_dict_mean_individ_telos_dfs = dict_mean_individ_telos_dfs
 
-        ctrl_L270 = pd.DataFrame()
-        ctrl_L180 = pd.DataFrame()
-        ctrl_L60 = pd.DataFrame()
+#     for idNO in list_of_IDs:
+        
+#         place_holder = ''
+#         ctrl_L270 = pd.DataFrame()
+#         ctrl_L180 = pd.DataFrame()
+#         ctrl_L60 = pd.DataFrame()
+#         ctrl_Mid1 = pd.DataFrame()
+#         ctrl_Mid2 = pd.DataFrame()
+#         ctrl_R7 = pd.DataFrame()
+#         ctrl_R60 = pd.DataFrame()
+#         ctrl_R180 = pd.DataFrame()
+#         ctrl_R270 = pd.DataFrame()
 
-        ctrl_R7 = pd.DataFrame()
-        ctrl_R60 = pd.DataFrame()
-        ctrl_R180 = pd.DataFrame()
-        ctrl_R270 = pd.DataFrame()
+#         # ctrl_L270name = ''
+#         # ctrl_L180name = ''
+#         # ctrl_L60name = ''
 
-        # ctrl_L270name = ''
-        # ctrl_L180name = ''
-        # ctrl_L60name = ''
-
-        # ctrl_R7name = ''
-        # ctrl_R60name = ''
-        # ctrl_R180name = ''
-        # ctrl_R270name = ''
+#         # ctrl_R7name = ''
+#         # ctrl_R60name = ''
+#         # ctrl_R180name = ''
+#         # ctrl_R270name = ''
 
 
-    #   #loop through dictionary keys
-        counter = 1
-    #       #loop through timepoints
-        for j in timepointSeries:
-            for i in dict_mean_individ_telos_dfs.keys():
-    #           #if the current astronaut ID is in this key and the timepoint is L-270, then
-    #           #enter the astronauts L270
-                if (idNO in i) and j == 'L-270' and ('L-270' in i):
-                    ctrl_L270 = dict_mean_individ_telos_dfs[i]
+#     #   #loop through dictionary keys
+#         counter = 1
+#     #       #loop through timepoints
+#         for j in timepointSeries:
+#             for i in copy_dict_mean_individ_telos_dfs.keys():
+#     #           #if the current astronaut ID is in this key and the timepoint is L-270, then
+#     #           #enter the astronauts L270
+#                 if (idNO in i) and j == 'L-270' and ('L-270' in i):
+#                     ctrl_L270 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_L270 = place_holder
+                
+#                     ctrl_L270['timepoint'] = 'fuuuck'
+#                     ctrl_L270['flight status ctrl'] = 'Pre-Flight'
 
-                    ctrl_PreF = pd.concat([ctrl_PreF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_L270], axis=0, sort=False)
 
                 
-                elif (idNO in i) and j == 'L-180' and ('L-180' in i):
-                    ctrl_L180 = dict_mean_individ_telos_dfs[i]
+#                 elif (idNO in i) and j == 'L-180' and ('L-180' in i):
+#                     ctrl_L180 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_L180 = place_holder
+                    
+#                     ctrl_L180['timepoint'] = 'fuck'
+#                     ctrl_L180['flight status ctrl'] = 'Pre-Flight'
     
-                    ctrl_PreF = pd.concat([ctrl_PreF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_L180], axis=0, sort=False)
 
 
-                elif (idNO in i) and j == 'L-60' and ('L-60' in i):
-                    ctrl_L60 = dict_mean_individ_telos_dfs[i]
+#                 elif (idNO in i) and j == 'L-60' and ('L-60' in i):
+#                     ctrl_L60 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_L60 = place_holder
+                    
+#                     ctrl_L60['timepoint'] = 'L-60'
+#                     ctrl_L60['flight status ctrl'] = 'Pre-Flight'
     
-                    ctrl_PreF = pd.concat([ctrl_PreF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_L60], axis=0, sort=False)
             
                 
-                elif (idNO in i) and (j == 'FD45' or j == 'FD90') and (j in i):
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                 elif (idNO in i) and (j == 'FD45' or j == 'FD90') and (j in i):         
+#                     ctrl_Mid1 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_Mid1 = place_holder
+                    
+#                     ctrl_Mid1['timepoint'] = j
+#                     ctrl_Mid1['flight status ctrl'] = 'Mid-Flight'
+                    
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_Mid1], axis=0, sort=False)
                     
                     
-                elif (idNO in i) and (j == 'FD140' or j == 'FD260') and (j in i):
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                 elif (idNO in i) and (j == 'FD140' or j == 'FD260') and (j in i):
+#                     ctrl_Mid2 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_Mid2 = place_holder
+                    
+#                     ctrl_Mid2['timepoint'] = j
+#                     ctrl_Mid2['flight status ctrl'] = 'Mid-Flight'
+                    
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_Mid2], sort=False)
 
 
-                elif (idNO in i) and j == 'R+7' and (j in i):
-                    ctrl_R7 = dict_mean_individ_telos_dfs[i]
+#                 elif (idNO in i) and j == 'R+7' and (j in i):
+#                     ctrl_R7 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_R7 = place_holder
+                    
+#                     ctrl_R7['timepoint'] = 'R+7'
+#                     ctrl_R7['flight status ctrl'] = 'Post-Flight'
     
-                    ctrl_PostF = pd.concat([ctrl_PostF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R7], axis=0, sort=False)
 
 
-                elif (idNO in i) and j == 'R+60' and (j in i):
-                    ctrl_R60 = dict_mean_individ_telos_dfs[i]
+#                 elif (idNO in i) and j == 'R+60' and (j in i):
+#                     ctrl_R60 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_R60 = place_holder
+                
+#                     ctrl_R60['timepoint'] = 'R+60'
+#                     ctrl_R60['flight status ctrl'] = 'Post-Flight'
     
-                    ctrl_PostF = pd.concat([ctrl_PostF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R60], axis=0, sort=False)
 
                   
-                elif (idNO in i) and j == 'R+180' and (j in i):
-                    ctrl_R180 = dict_mean_individ_telos_dfs[i]
+#                 elif (idNO in i) and j == 'R+180' and (j in i):
+#                     ctrl_R180 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_R180 = place_holder
+                    
+#                     ctrl_R180['timepoint'] = 'R+180'
+#                     ctrl_R180['flight status ctrl'] = 'Post-Flight'
+                                            
     
-                    ctrl_PostF = pd.concat([ctrl_PostF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)            
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R180], axis=0, sort=False)            
 
 
-                elif (idNO in i) and j == 'R+270' and (j in i):
-                    ctrl_R270 = dict_mean_individ_telos_dfs[i]
+#                 elif (idNO in i) and j == 'R+270' and (j in i):
+#                     ctrl_R270 = copy_dict_mean_individ_telos_dfs[i]
+# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
+# #                     ctrl_R270 = place_holder
+                    
+#                     ctrl_R270['timepoint'] = 'R+270'
+#                     ctrl_R270['flight status ctrl'] = 'Post-Flight'
     
-                    ctrl_PostF = pd.concat([ctrl_PostF, dict_mean_individ_telos_dfs[i]], sort=False)
-                    ctrl_Total = pd.concat([ctrl_Total, dict_mean_individ_telos_dfs[i]], sort=False)
+#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R270], axis=0, sort=False)
 
                         
-    print('data extraction complete')
-    return ctrl_Total
+#     print('data extraction complete')
+#     return ctrl_Total
         
     
         
@@ -730,6 +756,29 @@ def make_astronaut_dataframe(dict_astro_individ_telos_dfs):
     
     return astro_df
         
+    
+def make_control_dataframe(dict_astro_individ_telos_dfs):
+    data = []
+    
+    for name_key, telo_value in dict_astro_individ_telos_dfs.items():
+        astro_id = name_key[3:7]
+#         astro_num, synth = get_astro_number_from_id(astro_id)
+        time_point = get_timepoint(name_key)
+        flight_status = relative_flight_timepoint(name_key)
+        telo_value = pd.Series(telo_value.values.reshape(-1,))
+
+        data.append([astro_id, time_point, flight_status, telo_value, np.mean(telo_value.values)])
+
+    astro_df = pd.DataFrame(data, columns = ['control id', 'timepoint', 'flight status controls', 'telo data', 'telo means'])
+
+    sorter = ['L-270', 'L-180', 'L-60', 'FD45', 'FD90', 'FD140', 'FD260', 'R+5', 'R+7', 'R+60', 'R+105', 'R+180', 'R+270']
+    astro_df['timepoint'] = astro_df['timepoint'].astype('category')
+    astro_df['timepoint'].cat.set_categories(sorter, inplace=True)
+
+    astro_df = astro_df.sort_values(['control id', 'timepoint']).reset_index(drop=True)
+    
+    return astro_df
+
         
 # might be important for nasa astro bar graphs
 
@@ -751,3 +800,162 @@ def make_astronaut_dataframe(dict_astro_individ_telos_dfs):
 
 # print(explode_cells.shape)
 # explode_cells.head(5)
+
+
+# def evaluate_timepoint_presence(timepoint, df):
+#     if df[timepoint] != '':
+#         quartile = L_270
+#         return quartile
+    
+#     elif L_180 != '':
+#         quartile = L_180
+#         return quartile
+    
+# for timepoint in [L_270, L_180, L_60, R_7, R_60, R_180, R_270]:
+#     quartile = evaluate_timepoint_presence(L_270)
+#     print(quartile)
+#     break
+
+def histogram_plot_groups(x=None, data=None, 
+                                 groupby=None, iterable=None):
+    
+    group_df = data.groupby(groupby)
+    
+    for item in iterable:
+        plot_df = group_df.get_group(item)
+        
+        non_irrad = plot_df[plot_df['timepoint'] == '1 non irrad'][x]
+        irrad_4_Gy = plot_df[plot_df['timepoint'] == '2 irrad @ 4 Gy'][x]
+        three_B = plot_df[plot_df['timepoint'] == '3 B'][x]
+        four_C = plot_df[plot_df['timepoint'] == '4 C'][x]
+
+        n_bins = 70
+        fig, axs = plt.subplots(2, 2, sharey=True, tight_layout=False, figsize=(20, 13))
+        
+        ax = sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
+        ax = sns.set(font_scale=1)
+        
+        telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, non_irrad, non_irrad, f'patient #{item} 1 non rad', 0, 0)
+        telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, irrad_4_Gy, non_irrad, f'patient #{item} 2 irrad @ 4 Gy', 0, 1)
+        telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, three_B,  non_irrad, f'patient #{item} 3 B', 1, 0)
+        telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, four_C,  non_irrad, f'patient #{item} 4 C', 1, 1)
+        
+        
+def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
+
+    astro_ids = ['5163', '2171', '1536', '7673', '4819', '3228', 
+                         '2494', '2479', '2381', '1261', '1062']
+    
+    grouped_data = exploded_telos_df.groupby('astro id')
+
+    # by looping through astronaut ids, we'll pull out their respective dataframes
+    # once we have the astronauts respective dfs, we'll figure out the quartile df & 
+    for astro_id_num in astro_ids:
+
+        plot_df = grouped_data.get_group(astro_id_num)
+
+        for timepoint in ['L-270', 'L-180']:
+            first_timepoint = initialize_telo_data_1st_timepoint_variable(timepoint=timepoint, df=plot_df)
+            if first_timepoint.size > 30:
+                break
+
+        quartile_ref = first_timepoint
+
+    #     okay, now we have the first timepoint as the reference for making quartile cutoffs! 
+    #     now need to intialize other values!
+
+        name_L270, astro_L270 = initialize_telo_data_timepoint_or_blank('L-270', plot_df)
+        name_L180, astro_L180 = initialize_telo_data_timepoint_or_blank('L-180', plot_df)
+
+        if '5163' == astro_id_num or '1536' == astro_id_num:
+            name_Mid1, astro_Mid1 = initialize_telo_data_timepoint_or_blank('FD90', plot_df)
+            name_Mid2, astro_Mid2 = initialize_telo_data_timepoint_or_blank('FD140', plot_df)
+
+        if '2171' == astro_id_num:
+            name_Mid1, astro_Mid1 = initialize_telo_data_timepoint_or_blank('FD45', plot_df)
+            name_Mid2, astro_Mid2 = initialize_telo_data_timepoint_or_blank('FD260', plot_df)
+
+        name_R180, astro_R180 = initialize_telo_data_timepoint_or_blank('R+180', plot_df)
+        name_R270, astro_R270 = initialize_telo_data_timepoint_or_blank('R+270', plot_df)
+
+
+        if ('5163' == astro_id_num) or ('2171' == astro_id_num) or ('1536' == astro_id_num):
+            
+            n_bins = 60
+
+            if name_L270 != '': 
+                        if name_R270 != '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L270, astro_Mid1, astro_Mid2, astro_R270,
+                                                                    name_L270, name_Mid1, name_Mid2, name_R270)
+                        elif name_R270 == '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L270, astro_Mid1, astro_Mid2, astro_R180,
+                                                                    name_L270, name_Mid1, name_Mid2, name_R180)
+            elif name_L270 == '':
+                        if name_R270 != '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L180, astro_Mid1, astro_Mid2, astro_R270,
+                                                                    name_L180, name_Mid1, name_Mid2, name_R270)
+                        elif name_R270 == '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L180, astro_Mid1, astro_Mid2, astro_R180,
+                                                                    name_L180, name_Mid1, name_Mid2, name_R180)
+
+        elif astro_id_num in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
+            
+            n_bins = 60
+
+            graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270,
+                                                   name_L270, name_R270)
+            
+        plt.savefig(f'./individual telomere length histogram distributions/dso{astro_id_num} histogram of individual telomere length distributions.pdf')
+            
+def initialize_telo_data_1st_timepoint_variable(timepoint=None, df=None):
+
+    if timepoint in list(df['timepoint'].unique()):
+        variable = df[df['timepoint'] == str(timepoint)]['telo data exploded']
+        return variable
+    
+    elif timepoint not in list(df['timepoint'].unique()):
+        variable = pd.DataFrame([[0,1],[0,1]])
+        return variable
+    
+    
+def initialize_telo_data_timepoint_or_blank(timepoint, df):
+    if timepoint in list(df['timepoint'].unique()):
+        timepoint_telo_data = df[df['timepoint'] == str(timepoint)]['telo data exploded']
+        
+        name_id = str(df['astro id'].unique()[0])
+        name_timepoint = f' {timepoint}'
+        name_total = 'dso' + name_id + name_timepoint
+        return name_total, timepoint_telo_data
+        
+    elif timepoint not in list(df['timepoint'].unique()):
+        timepoint_telo_data = pd.DataFrame([0,1],[0,1])
+        name = ''
+        return name, timepoint_telo_data
+    
+            
+def graph_four_histograms(quartile_ref, n_bins, df1, df2, df3, df4,
+                                                name1, name2, name3, name4):
+    
+    n_bins = n_bins
+    fig, axs = plt.subplots(2,2, sharey=True, tight_layout=False, figsize = (16, 12))
+    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
+    
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df1, quartile_ref, name1, 0, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df2, quartile_ref, name2, 0, 1)
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df3, quartile_ref, name3, 1, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df4, quartile_ref, name4, 1, 1)
+    
+    
+    
+def graph_two_histograms(quartile_ref, n_bins, df1, df2,
+                                               name1, name2):
+    
+    n_bins = n_bins
+    fig, axs = plt.subplots(2, sharey=True, tight_layout=False, figsize = (16, 8))
+    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
+    
+    for ax in axs.flat:
+        ax.label_outer()
+    
+    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
