@@ -1,12 +1,16 @@
-#enables access to directories/files
+#e nables access to directories/files
 import os
 
+
+# for handling data
 import numpy as np
 from numpy import array
 import pandas as pd
 from pandas import ExcelWriter
 from pandas import ExcelFile
 
+
+# graphing
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 from matplotlib import colors
@@ -14,8 +18,11 @@ from matplotlib.ticker import PercentFormatter
 import seaborn as sns
 from ptitprince import PtitPrince as pt
 
+# statistics
 from scipy import stats
 from statsmodels.graphics.gofplots import qqplot
+
+
 
 
 
@@ -617,152 +624,7 @@ def raincloud_plot_astros_groups(x=None, y=None, data=None,
         #bw = sigma
         ax = pt.RainCloud(x = x, y = y, data = plot_df, palette = "Set2", bw = .20, 
                      width_viol = .8, figsize = (8,6), move=0.21, orient = "h")
-        plt.title(f'{item} telos', fontsize=16)
-
-
-
-# def read_control_dictionary_testing(dict_mean_individ_telos_dfs):
-    
-#     list_of_IDs = ['0397', '3907', '1826', '2377', '3609', '1264', '2580', '4127', '0646', '0100', '0912']
-#     timepointSeries = ['L-270', 'L-180', 'L-60', 'FD45', 'FD260', 'R+7', 'R+60', 'R+180', 'R+270'
-    
-# #     ctrl_Total = pd.DataFrame()
-    
-#     copy_dict_mean_individ_telos_dfs = dict_mean_individ_telos_dfs
-
-#     for idNO in list_of_IDs:
-        
-#         place_holder = ''
-#         ctrl_L270 = pd.DataFrame()
-#         ctrl_L180 = pd.DataFrame()
-#         ctrl_L60 = pd.DataFrame()
-#         ctrl_Mid1 = pd.DataFrame()
-#         ctrl_Mid2 = pd.DataFrame()
-#         ctrl_R7 = pd.DataFrame()
-#         ctrl_R60 = pd.DataFrame()
-#         ctrl_R180 = pd.DataFrame()
-#         ctrl_R270 = pd.DataFrame()
-
-#         # ctrl_L270name = ''
-#         # ctrl_L180name = ''
-#         # ctrl_L60name = ''
-
-#         # ctrl_R7name = ''
-#         # ctrl_R60name = ''
-#         # ctrl_R180name = ''
-#         # ctrl_R270name = ''
-
-
-#     #   #loop through dictionary keys
-#         counter = 1
-#     #       #loop through timepoints
-#         for j in timepointSeries:
-#             for i in copy_dict_mean_individ_telos_dfs.keys():
-#     #           #if the current astronaut ID is in this key and the timepoint is L-270, then
-#     #           #enter the astronauts L270
-#                 if (idNO in i) and j == 'L-270' and ('L-270' in i):
-#                     ctrl_L270 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_L270 = place_holder
-                
-#                     ctrl_L270['timepoint'] = 'fuuuck'
-#                     ctrl_L270['flight status ctrl'] = 'Pre-Flight'
-
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_L270], axis=0, sort=False)
-
-                
-#                 elif (idNO in i) and j == 'L-180' and ('L-180' in i):
-#                     ctrl_L180 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_L180 = place_holder
-                    
-#                     ctrl_L180['timepoint'] = 'fuck'
-#                     ctrl_L180['flight status ctrl'] = 'Pre-Flight'
-    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_L180], axis=0, sort=False)
-
-
-#                 elif (idNO in i) and j == 'L-60' and ('L-60' in i):
-#                     ctrl_L60 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_L60 = place_holder
-                    
-#                     ctrl_L60['timepoint'] = 'L-60'
-#                     ctrl_L60['flight status ctrl'] = 'Pre-Flight'
-    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_L60], axis=0, sort=False)
-            
-                
-#                 elif (idNO in i) and (j == 'FD45' or j == 'FD90') and (j in i):         
-#                     ctrl_Mid1 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_Mid1 = place_holder
-                    
-#                     ctrl_Mid1['timepoint'] = j
-#                     ctrl_Mid1['flight status ctrl'] = 'Mid-Flight'
-                    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_Mid1], axis=0, sort=False)
-                    
-                    
-#                 elif (idNO in i) and (j == 'FD140' or j == 'FD260') and (j in i):
-#                     ctrl_Mid2 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_Mid2 = place_holder
-                    
-#                     ctrl_Mid2['timepoint'] = j
-#                     ctrl_Mid2['flight status ctrl'] = 'Mid-Flight'
-                    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_Mid2], sort=False)
-
-
-#                 elif (idNO in i) and j == 'R+7' and (j in i):
-#                     ctrl_R7 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_R7 = place_holder
-                    
-#                     ctrl_R7['timepoint'] = 'R+7'
-#                     ctrl_R7['flight status ctrl'] = 'Post-Flight'
-    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R7], axis=0, sort=False)
-
-
-#                 elif (idNO in i) and j == 'R+60' and (j in i):
-#                     ctrl_R60 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_R60 = place_holder
-                
-#                     ctrl_R60['timepoint'] = 'R+60'
-#                     ctrl_R60['flight status ctrl'] = 'Post-Flight'
-    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R60], axis=0, sort=False)
-
-                  
-#                 elif (idNO in i) and j == 'R+180' and (j in i):
-#                     ctrl_R180 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_R180 = place_holder
-                    
-#                     ctrl_R180['timepoint'] = 'R+180'
-#                     ctrl_R180['flight status ctrl'] = 'Post-Flight'
-                                            
-    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R180], axis=0, sort=False)            
-
-
-#                 elif (idNO in i) and j == 'R+270' and (j in i):
-#                     ctrl_R270 = copy_dict_mean_individ_telos_dfs[i]
-# #                     place_holder = copy_dict_mean_individ_telos_dfs[i]
-# #                     ctrl_R270 = place_holder
-                    
-#                     ctrl_R270['timepoint'] = 'R+270'
-#                     ctrl_R270['flight status ctrl'] = 'Post-Flight'
-    
-#                     ctrl_Total = pd.concat([ctrl_Total, ctrl_R270], axis=0, sort=False)
-
-                        
-#     print('data extraction complete')
-#     return ctrl_Total
-        
+        plt.title(f'{item} telos', fontsize=16)        
     
         
 def make_astronaut_dataframe(dict_astro_individ_telos_dfs):
