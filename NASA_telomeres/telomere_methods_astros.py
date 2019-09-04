@@ -985,3 +985,8 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
         plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg',
                    format='svg', dpi=1500)
     
+    
+    
+    
+    
+   
