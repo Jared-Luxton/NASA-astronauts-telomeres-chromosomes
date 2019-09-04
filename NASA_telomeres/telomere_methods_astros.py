@@ -748,7 +748,171 @@ def histogram_plot_groups(x=None, data=None,
         telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, three_B,  non_irrad, f'patient #{item} 3 B', 1, 0)
         telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, four_C,  non_irrad, f'patient #{item} 4 C', 1, 1)
         
+            
         
+            
+def initialize_telo_data_1st_timepoint_variable(timepoint=None, df=None):
+
+    if timepoint in list(df['timepoint'].unique()):
+        variable = df[df['timepoint'] == str(timepoint)]['telo data exploded']
+        return variable
+    
+    elif timepoint not in list(df['timepoint'].unique()):
+        variable = pd.DataFrame([[0,1],[0,1]])
+        return variable
+    
+    
+def initialize_telo_data_timepoint_or_blank(timepoint, df):
+    if timepoint in list(df['timepoint'].unique()):
+        timepoint_telo_data = df[df['timepoint'] == str(timepoint)]['telo data exploded']
+        
+        name_id = str(df['astro id'].unique()[0])
+        name_timepoint = f' {timepoint}'
+        name_total = 'dso' + name_id + name_timepoint
+        return name_total, timepoint_telo_data
+        
+    elif timepoint not in list(df['timepoint'].unique()):
+        timepoint_telo_data = pd.DataFrame([0,1],[0,1])
+        name = ''
+        return name, timepoint_telo_data
+    
+########################################################################################################################
+########################################################################################################################
+
+# FUNCTIONS FOR GRAPHING INDIVIDUAL TELOMERES 
+
+########################################################################################################################
+########################################################################################################################
+    
+            
+def graph_four_histograms(quartile_ref, n_bins, df1, df2, df3, df4,
+                                                name1, name2, name3, name4):
+    
+    n_bins = n_bins
+    fig, axs = plt.subplots(2,2, sharey=True, sharex=True, constrained_layout=True, figsize = (14, 9))
+    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
+    
+    fig.add_subplot(111, frameon=False)
+    plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
+    plt.grid(False)
+    
+    plt.rc('xtick',labelsize=12)
+    plt.rc('ytick',labelsize=12)
+    
+#     csfont = {'fontname':'sans-serif'}
+#     plt.suptitle(f"Individual Telomere Length Distributions at \nPre, Mid-1, Mid-2, and Post-Flight: {name1[0:8]}", 
+#                  y=.95, fontsize=14, **csfont)
+
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df1, quartile_ref, name1, 0, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df2, quartile_ref, name2, 0, 1)
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df3, quartile_ref, name3, 1, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df4, quartile_ref, name4, 1, 1)
+    
+    
+    
+def graph_two_histograms(quartile_ref, n_bins, df1, df2,
+                                               name1, name2, controls=None):
+    
+    n_bins = n_bins
+    fig, axs = plt.subplots(2, sharey=True, constrained_layout=True, figsize = (10, 7))
+    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
+    
+    for ax in axs.flat:
+        ax.label_outer()
+        
+    plt.rc('xtick',labelsize=12)
+    plt.rc('ytick',labelsize=12)
+    
+    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
+    
+#     csfont = {'fontname':'sans-serif'}
+#     plt.suptitle(f"Individual Telomere Length Distributions at Pre and Post-Flight: {name1[0:8]}", 
+#                  y=.95, fontsize=14, **csfont)
+    
+#     if controls == True:
+#         csfont = {'fontname':'sans-serif'}
+#         plt.suptitle(f"Individual Telomere Length Distributions at Pre and Post-Flight: All Control Samples", 
+#                      y=.95, fontsize=14, **csfont)
+        
+    
+    
+def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone, axsNUMtwo):
+
+    astroDF = astroDF.to_numpy()
+    astroquartile = astroquartile.to_numpy()
+
+    N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
+
+    for a in range(len(patches)):
+        if bins[a] <= np.quantile(astroquartile, 0.25):
+            patches[a].set_facecolor('#fdff38')
+
+        elif np.quantile(astroquartile, 0.25) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.50):
+            patches[a].set_facecolor('#d0fefe')
+
+        elif np.quantile(astroquartile, 0.50) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.75):
+            patches[a].set_facecolor('#d0fefe')
+
+        elif bins[a] > np.quantile(astroquartile, 0.75): 
+            patches[a].set_facecolor('#ffbacd')
+
+
+    axs[axsNUMone,axsNUMtwo].set_title(f"{astroname}", fontsize=18,)
+    
+    font_axes=16
+
+    if axsNUMone == 0 and axsNUMtwo == 0:
+        axs[axsNUMone,axsNUMtwo].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
+        
+    if axsNUMone == 1 and axsNUMtwo == 0:
+        axs[axsNUMone,axsNUMtwo].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
+        axs[axsNUMone,axsNUMtwo].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
+            
+    if axsNUMone == 1 and axsNUMtwo == 1:
+        axs[axsNUMone,axsNUMtwo].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
+                  
+    axs[axsNUMone,axsNUMtwo].xaxis.set_major_locator(plt.MaxNLocator(12))
+        
+
+        
+def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone):
+
+    astroDF = astroDF.to_numpy()
+    astroquartile = astroquartile.to_numpy()
+
+
+    N, bins, patches = axs[axsNUMone].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
+
+    for a in range(len(patches)):
+        if bins[a] <= np.quantile(astroquartile, 0.25):
+            patches[a].set_facecolor('#fdff38')
+
+        elif np.quantile(astroquartile, 0.25) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.50):
+            patches[a].set_facecolor('#d0fefe')
+
+        elif np.quantile(astroquartile, 0.50) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.75):
+            patches[a].set_facecolor('#d0fefe')
+
+        elif bins[a] > np.quantile(astroquartile, 0.75): 
+            patches[a].set_facecolor('#ffbacd')
+
+
+    axs[axsNUMone].set_title(f"{astroname}", fontsize=18,)
+    
+    font_axes=16
+
+    if axsNUMone == 0 or axsNUMone == 1:
+        axs[axsNUMone].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
+        
+    if axsNUMone == 1:
+        axs[axsNUMone].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
+            
+            
+    axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(12))
+    
+    
+    
 def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
 
     astro_ids = ['5163', '2171', '1536', '7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']
@@ -815,57 +979,9 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
             graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270,
                                                    name_L270, name_R270)
             
-        plt.savefig(f'../individual telomere length histogram distributions/dso{astro_id_num} histogram of individual telomere length distributions.pdf')
-            
-def initialize_telo_data_1st_timepoint_variable(timepoint=None, df=None):
-
-    if timepoint in list(df['timepoint'].unique()):
-        variable = df[df['timepoint'] == str(timepoint)]['telo data exploded']
-        return variable
-    
-    elif timepoint not in list(df['timepoint'].unique()):
-        variable = pd.DataFrame([[0,1],[0,1]])
-        return variable
-    
-    
-def initialize_telo_data_timepoint_or_blank(timepoint, df):
-    if timepoint in list(df['timepoint'].unique()):
-        timepoint_telo_data = df[df['timepoint'] == str(timepoint)]['telo data exploded']
+        plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png',
+                   dpi=600)
         
-        name_id = str(df['astro id'].unique()[0])
-        name_timepoint = f' {timepoint}'
-        name_total = 'dso' + name_id + name_timepoint
-        return name_total, timepoint_telo_data
-        
-    elif timepoint not in list(df['timepoint'].unique()):
-        timepoint_telo_data = pd.DataFrame([0,1],[0,1])
-        name = ''
-        return name, timepoint_telo_data
+        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg',
+                   format='svg', dpi=1500)
     
-            
-def graph_four_histograms(quartile_ref, n_bins, df1, df2, df3, df4,
-                                                name1, name2, name3, name4):
-    
-    n_bins = n_bins
-    fig, axs = plt.subplots(2,2, sharey=True, tight_layout=False, figsize = (16, 12))
-    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
-    
-    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df1, quartile_ref, name1, 0, 0)
-    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df2, quartile_ref, name2, 0, 1)
-    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df3, quartile_ref, name3, 1, 0)
-    astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df4, quartile_ref, name4, 1, 1)
-    
-    
-    
-def graph_two_histograms(quartile_ref, n_bins, df1, df2,
-                                               name1, name2):
-    
-    n_bins = n_bins
-    fig, axs = plt.subplots(2, sharey=True, tight_layout=False, figsize = (16, 8))
-    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
-    
-    for ax in axs.flat:
-        ax.label_outer()
-    
-    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
-    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
