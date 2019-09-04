@@ -986,7 +986,4 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
                    format='svg', dpi=1500)
     
     
-    
-    
-    
-   
+ 
