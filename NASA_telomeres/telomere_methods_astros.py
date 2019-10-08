@@ -1,4 +1,4 @@
-#e nables access to directories/files
+# enables access to directories/files
 import os
 
 
@@ -18,10 +18,9 @@ from matplotlib.ticker import PercentFormatter
 import seaborn as sns
 from ptitprince import PtitPrince as pt
 
-# statistics
-from scipy import stats
-from statsmodels.graphics.gofplots import qqplot
 
+from statsmodels.graphics.gofplots import qqplot
+from scipy import stats
 
 
 
@@ -210,23 +209,23 @@ def gen_missing_values_andimpute_or_randomsampledown(n_cells, telosPercell, astr
 def statistics_between_timepoints(astro_pre, astro_mid1, astro_mid2, astro_post, 
     astro_prename, astro_mid1name, astro_mid2name, astro_postname):
 
-    print(astro_prename + '  compared vs  ' + astro_mid1name,
-            stats.mannwhitneyu(astro_pre, astro_mid1), '\n\n\n',
+    print(  astro_prename + '  vs  ' + astro_mid1name,
+            stats.mannwhitneyu(astro_pre, astro_mid1), '\n',
 
-            astro_prename + '  compared vs  ' + astro_mid2name,
-            stats.mannwhitneyu(astro_pre, astro_mid2),'\n\n\n', 
+            astro_prename + '  vs  ' + astro_mid2name,
+            stats.mannwhitneyu(astro_pre, astro_mid2),'\n', 
             
-            astro_mid1name + '  compared vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_mid1, astro_post),'\n\n\n', 
+            astro_mid1name + '  vs  ' + astro_postname,
+            stats.mannwhitneyu(astro_mid1, astro_post),'\n', 
 
-            astro_mid1name + '  compared vs  ' + astro_mid2name,
-            stats.mannwhitneyu(astro_mid1, astro_mid2),'\n\n\n', 
+            astro_mid1name + '  vs  ' + astro_mid2name,
+            stats.mannwhitneyu(astro_mid1, astro_mid2),'\n', 
 
-            astro_mid2name + '  compared vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_mid2, astro_post),'\n\n\n', 
+            astro_mid2name + '  vs  ' + astro_postname,
+            stats.mannwhitneyu(astro_mid2, astro_post),'\n', 
 
-            astro_prename + '  compared vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_pre, astro_post),'\n\n\n', )
+            astro_prename + '  vs  ' + astro_postname,
+            stats.mannwhitneyu(astro_pre, astro_post),'\n', )
 
 
     
@@ -557,7 +556,7 @@ def grab_control_values_generate_dictionary(patharg):
 
     for file in os.scandir(patharg):
         if file.name.endswith('.xlsx') and file.name.startswith('~$') == False:
-            print(file.name, 'IT WORKS PEGGY!!! <3')
+            print(file.name, 'telomere data acquisition in progress..')
         
             try:
                 df = pd.read_excel(file)
@@ -609,6 +608,103 @@ def grab_control_values_generate_dictionary(patharg):
     return dict_mean_individ_telos_dfs
 
 
+def grab_control_telo_values_per_cell_generate_dictionary(patharg):
+
+    """
+
+    """
+
+    dict_mean_individ_telos_dfs = {}
+
+    for file in os.scandir(patharg):
+        if file.name.endswith('.xlsx') and file.name.startswith('~$') == False:
+            print(file.name, 'telomere data acquisition in progress..')
+        
+            try:
+                df = pd.read_excel(file, skiprows=3)
+                df = df.iloc[0:30, 12].to_frame()
+
+            except:
+                print('File not found..')
+                return -1
+
+            mean_individ_df = df.dropna(axis=0, how='any')
+
+            if '0397' in file.name:
+                mean_individ_df_cy3Cal = mean_individ_df.div(2.285)
+
+            elif '3907' in file.name:
+                mean_individ_df_cy3Cal = mean_individ_df.div(2.179)
+
+            elif '1826' in file.name:
+                mean_individ_df_cy3Cal = mean_individ_df.div(2.143)
+
+            elif '0100' in file.name:
+                mean_individ_df_cy3Cal = mean_individ_df.div(59.86)
+
+            elif '0912' in file.name:
+                mean_individ_df_cy3Cal = mean_individ_df.div(80.5)
+
+            elif '0646' in file.name:
+                mean_individ_df_cy3Cal = mean_individ_df.div(80.5)
+
+            else:
+                mean_individ_df_cy3Cal = mean_individ_df
+
+            file_name_trimmed = file.name.replace('.xlsx', '')
+            
+            mean_individ_df_cy3Cal = mean_individ_df_cy3Cal.div(116.1848153)
+            dict_mean_individ_telos_dfs[file_name_trimmed] = mean_individ_df_cy3Cal
+
+    print('data collection complete')
+    return dict_mean_individ_telos_dfs
+
+
+def grab_astro_telo_values_per_cell_generate_dictionary(patharg):
+
+    dict_astro_individ_telos_dfs = {}
+
+    for file in os.scandir(patharg):
+        if file.name.endswith('.xlsx') and file.name.startswith('~$') == False:
+            print(f'{file.name} telomere data acquisition in progress..')
+        
+            try:
+                df = pd.read_excel(file, skiprows=3)
+                df = df.iloc[0:30, 12].to_frame()
+
+            except:
+                print(f'{file.name} File not found..')
+                return -1
+            
+            telos_individ_df = df.dropna(axis=0, how='any')
+            
+            if ('5163' in file.name) or ('1536' in file.name):
+                telos_individ_df_cy3Cal = telos_individ_df.div(59.86)
+
+            elif '2171' in file.name:
+                telos_individ_df_cy3Cal = telos_individ_df.div(80.5)
+
+            elif '7673' in file.name:
+                telos_individ_df_cy3Cal = telos_individ_df.div(2.11)
+
+            elif '2479' in file.name:
+                telos_individ_df_cy3Cal = telos_individ_df.div(2.18)
+
+            elif '1261' in file.name:
+                telos_individ_df_cy3Cal = telos_individ_df.div(2.16)
+
+            else:
+                telos_individ_df_cy3Cal = telos_individ_df
+            
+            telos_individ_df_cy3Cal = telos_individ_df_cy3Cal.div(116.1848153)
+
+            file_name_trimmed = file.name.replace('.xlsx', '')
+            dict_astro_individ_telos_dfs[file_name_trimmed] = telos_individ_df_cy3Cal
+
+    print('Done collecting all astronaut telomere length excel files')
+    return dict_astro_individ_telos_dfs
+
+
 def raincloud_plot_astros_groups(x=None, y=None, data=None, 
                                  groupby=None, iterable=None):
     
@@ -652,6 +748,33 @@ def make_astronaut_dataframe(dict_astro_individ_telos_dfs):
     astro_df = astro_df.sort_values(['astro number', 'timepoint']).reset_index(drop=True)
     
     return astro_df
+
+
+def make_astronaut_cell_data_dataframe(dict_astro_individ_telos_dfs):
+    data = []
+    
+    for name_key, telo_value in dict_astro_individ_telos_dfs.items():
+        astro_id = name_key[3:7]
+        astro_num, synth = get_astro_number_from_id(astro_id)
+        time_point = get_timepoint(name_key)
+        flight_status = relative_flight_timepoint(name_key)
+        telo_value = pd.Series(telo_value.values.reshape(-1,))
+
+        data.append([astro_num, astro_id, time_point, flight_status, telo_value, np.mean(telo_value.values)])
+
+    astro_df = pd.DataFrame(data, columns = ['astro number', 'astro id', 'timepoint', 'flight status', 'telo data per cell', 'telo means'])
+
+    sorter = ['L-270', 'L-180', 'L-60', 'FD45', 'FD90', 'FD140', 'FD260', 'R+5', 'R+7', 'R+60', 'R+105', 'R+180', 'R+270']
+    astro_df['timepoint'] = astro_df['timepoint'].astype('category')
+    astro_df['timepoint'].cat.set_categories(sorter, inplace=True)
+
+    astro_df['Q1'] = 'telos preF Q1 <0.25'
+    astro_df['Q2-3'] = 'telos preF Q2-3 >0.25 & <0.75'
+    astro_df['Q4'] = 'telos preF Q4 >0.75'
+
+    astro_df = astro_df.sort_values(['astro number', 'timepoint']).reset_index(drop=True)
+    
+    return astro_df
         
     
 def make_control_dataframe(dict_astro_individ_telos_dfs):
@@ -676,42 +799,29 @@ def make_control_dataframe(dict_astro_individ_telos_dfs):
     
     return astro_df
 
+
+def make_control_cell_data_dataframe(dict_astro_individ_telos_dfs):
+    data = []
+    
+    for name_key, telo_value in dict_astro_individ_telos_dfs.items():
+        astro_id = name_key[3:7]
+#         astro_num, synth = get_astro_number_from_id(astro_id)
+        time_point = get_timepoint(name_key)
+        flight_status = relative_flight_timepoint(name_key)
+        telo_value = pd.Series(telo_value.values.reshape(-1,))
+
+        data.append([astro_id, time_point, flight_status, telo_value, np.mean(telo_value.values)])
+
+    astro_df = pd.DataFrame(data, columns = ['control id', 'timepoint', 'flight status controls', 'telo data per cell', 'telo means'])
+
+    sorter = ['L-270', 'L-180', 'L-60', 'FD45', 'FD90', 'FD140', 'FD260', 'R+5', 'R+7', 'R+60', 'R+105', 'R+180', 'R+270']
+    astro_df['timepoint'] = astro_df['timepoint'].astype('category')
+    astro_df['timepoint'].cat.set_categories(sorter, inplace=True)
+
+    astro_df = astro_df.sort_values(['control id', 'timepoint']).reset_index(drop=True)
+    
+    return astro_df
         
-# might be important for nasa astro bar graphs
-
-# # shape (51, 56)
-
-# all_patients_df_copy = all_patients_df.drop([44, 45, 46], axis=0)
-
-# #taking all_patients_df, removing the index & making a multi index of patient id and timepoint
-# individ_cell_cols = all_patients_df_copy.reindex().set_index(['patient id', 'timepoint']) 
-
-# #removing unnecessary columns
-# individ_cell_cols.drop(['chr data', 'telo data', 'status', 'telo means', 'Q1', 'Q2-3', 'Q4'], axis=1, inplace=True)
-
-# #exploding the series containing the individual telos
-# explode_cells = individ_cell_cols['cell data'].apply(pd.Series)
-
-# #transpose!
-# explode_cells = explode_cells.reset_index(level=['patient id']).T
-
-# print(explode_cells.shape)
-# explode_cells.head(5)
-
-
-# def evaluate_timepoint_presence(timepoint, df):
-#     if df[timepoint] != '':
-#         quartile = L_270
-#         return quartile
-    
-#     elif L_180 != '':
-#         quartile = L_180
-#         return quartile
-    
-# for timepoint in [L_270, L_180, L_60, R_7, R_60, R_180, R_270]:
-#     quartile = evaluate_timepoint_presence(L_270)
-#     print(quartile)
-#     break
 
 def mid_split(row):
     if 'FD90' in row or 'FD45' in row:
@@ -979,11 +1089,196 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
             graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270,
                                                    name_L270, name_R270)
             
-        plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png',
-                   dpi=600)
+        plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png', dpi=600)
         
-        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg',
-                   format='svg', dpi=1500)
+        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
     
+
+
+########################################################################################################################
+########################################################################################################################
+
+# FUNCTIONS FOR GRAPHING INDIVIDUAL TELOMERES 
+
+########################################################################################################################
+########################################################################################################################
+
+def select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest):
     
- 
+    telomere_df['astro id'] = telomere_df['astro id'].astype('str')
+    
+    if 'astro id' in analyte_df.columns:
+        analyte_df['astro id'] = analyte_df['astro id'].astype('str')
+    
+    if 'sample type' in analyte_df.columns:
+        analyte_df.drop('sample type', axis=1, inplace=True)
+    
+    # dropping unnecessary cols from telo df
+    trim_astro_df = telomere_df.drop(['astro number', 'timepoint', 'telo means',], axis=1)
+    
+    if astro_ids_of_interest == 'all astros':
+        
+        # i.e as of 10/7/19 I only have n=4 (contains astro id col) & n=11 (no astro id) dataframes for analytes
+        # I think when I received n=3 astros.. just type astro ids for astro_ids_of_interest, it will work properly
+        # or.. if i receive n=11 dataframe with labeled astros.. 
+        # just rewrite this area to accept n=11 df w/ astro id col
+        if 'astro id' in analyte_df.columns:
+            (print("Possible error.. the astro id column is present.. all astros were requested but this df potentially" 
+                  "contains less than all 11 astros.. drop astro id col and retry"))
+            return
+        else: 
+            # retain all astro ids
+            selected_astros = trim_astro_df
+            id_values = ['flight status']
+
+    elif astro_ids_of_interest != 'all astros':
+        # subset astro ids of interest 
+        selected_astros = trim_astro_df[trim_astro_df['astro id'].isin(astro_ids_of_interest)].reset_index(drop=True)
+        id_values = ['astro id', 'flight status']
+        
+    return analyte_df, selected_astros, id_values
+
+
+def merge_analyte_telomere_data(analyte_df, selected_astros, id_values):
+    
+    # take mean telomere length values of all astronauts or per astros of interest & merge with analytes 
+    mean_selected_astros = selected_astros.groupby(id_values).agg('mean').reset_index()
+    merge_analyte_df = analyte_df.merge(mean_selected_astros, on=id_values)
+    merge_analyte_df.rename(columns={'telo data per cell':'Mean Telomere Length'}, inplace=True)
+    
+    # prepare to drop any columns w/ missing data
+    indexer=['timepoint', 'Mean Telomere Length']
+    for id_value in id_values:
+        indexer.append(id_value)
+        
+    return merge_analyte_df, indexer
+
+
+def how_drop_missing_values(merge_analyte_df, how_drop_missing, indexer):
+    # drop every analyte (columns) with missing data
+    if how_drop_missing == 'by column':
+        pivot_merge = (merge_analyte_df.pivot_table(index=indexer, columns='biochemistry analyte', 
+                                                    values='measured analyte').reset_index())
+        pivot_merge.dropna(axis=1, inplace=True)
+        cleaned_data = pivot_merge.melt(id_vars=indexer, var_name='biochemistry analyte', 
+                                        value_name='measured analyte').reset_index(drop=True)
+    
+    # drop missing data on per analyte/timepoint/astro (row) basis 
+    elif how_drop_missing == 'by melted row':
+        cleaned_data = merge_analyte_df.dropna(axis=0)
+        
+    return cleaned_data
+
+
+def retain_flight_status(cleaned_data, retain_what_flight_status):
+    # retaining analytes for which flight status
+    if retain_what_flight_status == 'any':
+        retained_data = cleaned_data
+        
+    elif bool(set(retain_what_flight_status) & set(['Pre-Flight', 'Mid-Flight', 'Post-Flight'])) == True:
+        retained_data = cleaned_data[cleaned_data['flight status'].isin(retain_what_flight_status)]
+        
+    elif retain_what_flight_status == 'require at least one per status':
+        total_analytes = list(cleaned_data['biochemistry analyte'].unique())
+        analytes_3_unique_flight = []
+        groupby_analyte = cleaned_data.groupby('biochemistry analyte')
+        
+        for analyte in total_analytes:
+            # make groups by analyte
+            get_group_by_analyte = groupby_analyte.get_group(analyte)
+            
+            # look at unique flight status values per analyte
+            grouped_flight_status_list = list(get_group_by_analyte['flight status'].unique())
+            
+            # abbreviate name of unique flight status values
+            g_f_s_t = grouped_flight_status_list
+            
+            # if pre, mid, and post flight values in unique value list per analyte, then add this analyte to a list
+            if 'Pre-Flight' in g_f_s_t and 'Mid-Flight' in g_f_s_t and 'Post-Flight' in g_f_s_t:
+                analytes_3_unique_flight.append(analyte)
+        
+        # retain only analytes with at least one measurement per flight status 
+        analytes_only_3_unique_df = cleaned_data[cleaned_data['biochemistry analyte'].isin(analytes_3_unique_flight)]
+        return analytes_only_3_unique_df
+        
+    return retained_data
+
+
+def correlate_astro_analytes_telomeres_pipeline(analyte_df=None, telomere_df=None, astro_ids_of_interest=None,
+                                                how_drop_missing=None, retain_what_flight_status=None):
+    """
+    High level fxn description 
+    
+    Args:
+        analyte_df (pandas dataframe): Contains either n=4 or n=11 biochemical analyte data in tidy data format.
+        
+        telomere_df (pandas dataframe): Must contain complete telomere length data in tidy data format.
+        
+        astro_ids_of_interest (str or list of str): Accepts either 'all astros' as str, whereby all astronaut data is 
+        used for correlating telo/analyte data, or a list of astro ids to subset data for analysis.
+        
+        how_drop_missing (str): Accepts either 'by column', which drops any analyte containing at least one missing value,
+        or 'by melted row', which drops only single instances of missing values.
+        
+        retain_what_flight_status (str or list of tring): decides how to subset individual analytes based on what 
+        flight status labels they have 
+        
+            Accepts: 'any', whereby no subselection is placed on analytes based on flight status, 
+            or: subset data by flight status (list of str) for all analytes as a GROUP i.e ['Pre-Flight'] or ['Pre-Flight', 'Post-Flight']
+            or: 'require at least one per status', where EACH analytes must have at least one measurement per flight status 
+
+    Returns:
+        retained_data (pandas dataframe): Data subject to the processing steps described above.
+    """
+    
+    # selecting astros of interest & capturing id values for handling merges 
+    analyte_df, selected_astros, id_values = select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest)
+
+    # merging analyte & telomere data, capturing indexer for handling missing data
+    merge_analyte_df, indexer = merge_analyte_telomere_data(analyte_df, selected_astros, id_values)
+
+    # dropping missing values based on input
+    cleaned_data = how_drop_missing_values(merge_analyte_df, how_drop_missing, indexer)
+    
+    # subsetting values based on flight status labels 
+    retained_data = retain_flight_status(cleaned_data, retain_what_flight_status)
+    
+    return retained_data
+
+
+def find_high_correlates_analytes_mean_telos(merged_analyte_blood_tidy_df, corr_cutoff, corr_loc=0, astro_ids=False):
+    
+    if astro_ids == False:
+        corr_value_tests = []
+
+        grouped_by_analyte = merged_analyte_blood_tidy_df.groupby('biochemistry analyte')
+
+        for group in list(merged_analyte_blood_tidy_df['biochemistry analyte'].unique()):
+            corr_value = grouped_by_analyte.get_group(group).corr()['Mean Telomere Length'][corr_loc]
+
+            if abs(corr_value) > corr_cutoff:
+                corr_value_tests.append([group, corr_value])
+                print(f"{group}: {corr_value:.4f}")
+
+        return corr_value_tests
+    
+    elif astro_ids == True:
+        
+        corr_value_requested = input('Please state index for correlation value in corr().. 0 or 1')
+        corr_value_tests = []
+        astro_ids = list(merged_analyte_blood_tidy_df['astro id'].unique())
+        astro_id_group = merged_analyte_blood_tidy_df.groupby('astro id')
+
+        for astro in astro_ids:
+            individ_astro_df = astro_id_group.get_group(astro)
+            analyte_grouped_by_individ = individ_astro_df.groupby('biochemistry analyte')
+            analytes = list(individ_astro_df['biochemistry analyte'].unique())
+
+            for analyte in analytes:
+                corr_value = analyte_grouped_by_individ.get_group(analyte).corr()['Mean Telomere Length'][int(corr_value_requested)]
+                corr_value_tests.append([astro, analyte, corr_value])
+                
+                if abs(corr_value) > corr_cutoff:
+                    print(f"{astro} - {analyte}: {corr_value:.4f}")
+                    
+        return corr_value_tests
