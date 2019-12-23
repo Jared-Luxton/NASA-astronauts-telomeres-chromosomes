@@ -232,7 +232,7 @@ def statistics_between_timepoints(astro_pre, astro_mid1, astro_mid2, astro_post,
 def statistics_between_timepoints_prepost_only(astro_pre, astro_post, astro_prename, astro_postname):
 
     print(astro_prename + '  compared vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_pre, astro_post),'\n\n\n', )
+            stats.mannwhitneyu(astro_pre, astro_post),'\n', )
     
     
     
@@ -1023,9 +1023,9 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
     
     
     
-def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
+def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, astro_ids=None):
 
-    astro_ids = ['5163', '2171', '1536', '7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']
+#     astro_ids = ['5163', '2171', '1536', '7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']
     
     grouped_data = exploded_telos_df.groupby('astro id')
 
@@ -1091,14 +1091,81 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None):
             
         plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png', dpi=600)
         
-        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
+#         plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
     
+    
+def initialize_encoded_telo_data_timepoint_or_blank(timepoint, df):
+    if timepoint in list(df['timepoint'].unique()):
+        timepoint_telo_data = df[df['timepoint'] == str(timepoint)]['telo data exploded']
+        
+        name_id = str(df['encoded astro id'].unique()[0])
+        name_timepoint = f' {timepoint}'
+        name_total = 'astro ' + name_id + name_timepoint
+        return name_total, timepoint_telo_data
+        
+    elif timepoint not in list(df['timepoint'].unique()):
+        timepoint_telo_data = pd.DataFrame([0,1],[0,1])
+        name = ''
+        return name, timepoint_telo_data
+    
+    
+def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df=None, astro_ids=None):
+    grouped_data = exploded_telos_df.groupby('encoded astro id')
+    for astro_id_num in astro_ids:
+        if astro_id_num not in grouped_data.groups.keys():
+            break
+        plot_df = grouped_data.get_group(astro_id_num)
+
+        for timepoint in ['L-270', 'L-180']:
+            first_timepoint = initialize_telo_data_1st_timepoint_variable(timepoint=timepoint, df=plot_df)
+            if first_timepoint.size > 30:
+                break
+        quartile_ref = first_timepoint
+
+        name_L270, astro_L270 = initialize_encoded_telo_data_timepoint_or_blank('L-270', plot_df)
+        name_L180, astro_L180 = initialize_encoded_telo_data_timepoint_or_blank('L-180', plot_df)
+
+        if 'B' == astro_id_num or 'C' == astro_id_num:
+            name_Mid1, astro_Mid1 = initialize_encoded_telo_data_timepoint_or_blank('FD90', plot_df)
+            name_Mid2, astro_Mid2 = initialize_encoded_telo_data_timepoint_or_blank('FD140', plot_df)
+        if 'A' == astro_id_num:
+            name_Mid1, astro_Mid1 = initialize_encoded_telo_data_timepoint_or_blank('FD45', plot_df)
+            name_Mid2, astro_Mid2 = initialize_encoded_telo_data_timepoint_or_blank('FD260', plot_df)
+        name_R180, astro_R180 = initialize_encoded_telo_data_timepoint_or_blank('R+180', plot_df)
+        name_R270, astro_R270 = initialize_encoded_telo_data_timepoint_or_blank('R+270', plot_df)
+
+
+        if ('B' == astro_id_num) or ('A' == astro_id_num) or ('C' == astro_id_num):
+            n_bins = 60
+            if name_L270 != '': 
+                        if name_R270 != '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L270, astro_Mid1, astro_Mid2, astro_R270,
+                                                                    name_L270, name_Mid1, name_Mid2, name_R270)
+                        elif name_R270 == '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L270, astro_Mid1, astro_Mid2, astro_R180,
+                                                                    name_L270, name_Mid1, name_Mid2, name_R180)
+            elif name_L270 == '':
+                        if name_R270 != '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L180, astro_Mid1, astro_Mid2, astro_R270,
+                                                                    name_L180, name_Mid1, name_Mid2, name_R270)
+                        elif name_R270 == '':
+                            graph_four_histograms(quartile_ref, n_bins, astro_L180, astro_Mid1, astro_Mid2, astro_R180,
+                                                                    name_L180, name_Mid1, name_Mid2, name_R180)
+
+        elif astro_id_num in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
+            n_bins = 60
+            graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270,
+                                                   name_L270, name_R270)
+            
+        plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png', dpi=600)
+        
+#         plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
 
 
 ########################################################################################################################
 ########################################################################################################################
 
-# FUNCTIONS FOR GRAPHING INDIVIDUAL TELOMERES 
+# FUNCTIONS FOR CORRELATING TELOMERES WITH ANALYTE DATA
 
 ########################################################################################################################
 ########################################################################################################################
@@ -1139,10 +1206,15 @@ def select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest):
     return analyte_df, selected_astros, id_values
 
 
-def merge_analyte_telomere_data(analyte_df, selected_astros, id_values):
+def merge_analyte_telomere_data(analyte_df, selected_astros, id_values, telos_percent_change):
     
     # take mean telomere length values of all astronauts or per astros of interest & merge with analytes 
     mean_selected_astros = selected_astros.groupby(id_values).agg('mean').reset_index()
+    
+    if telos_percent_change == 'yes':
+        mean_selected_astros['telo data per cell'] = (mean_selected_astros['telo data per cell']
+                                                      .apply(lambda row: make_telos_percent_change(row)))
+        
     merge_analyte_df = analyte_df.merge(mean_selected_astros, on=id_values)
     merge_analyte_df.rename(columns={'telo data per cell':'Mean Telomere Length'}, inplace=True)
     
@@ -1204,8 +1276,14 @@ def retain_flight_status(cleaned_data, retain_what_flight_status):
     return retained_data
 
 
+def make_telos_percent_change(row):
+    percent_chg_telos = ((row - 0.938117) / 0.938117) * 100
+    return percent_chg_telos
+
+
 def correlate_astro_analytes_telomeres_pipeline(analyte_df=None, telomere_df=None, astro_ids_of_interest=None,
-                                                how_drop_missing=None, retain_what_flight_status=None):
+                                                how_drop_missing=None, retain_what_flight_status=None,
+                                                telos_percent_change='no'):
     """
     High level fxn description 
     
@@ -1235,7 +1313,7 @@ def correlate_astro_analytes_telomeres_pipeline(analyte_df=None, telomere_df=Non
     analyte_df, selected_astros, id_values = select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest)
 
     # merging analyte & telomere data, capturing indexer for handling missing data
-    merge_analyte_df, indexer = merge_analyte_telomere_data(analyte_df, selected_astros, id_values)
+    merge_analyte_df, indexer = merge_analyte_telomere_data(analyte_df, selected_astros, id_values, telos_percent_change)
 
     # dropping missing values based on input
     cleaned_data = how_drop_missing_values(merge_analyte_df, how_drop_missing, indexer)
