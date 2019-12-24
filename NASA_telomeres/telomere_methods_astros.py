@@ -207,25 +207,25 @@ def gen_missing_values_andimpute_or_randomsampledown(n_cells, telosPercell, astr
     
     
 def statistics_between_timepoints(astro_pre, astro_mid1, astro_mid2, astro_post, 
-    astro_prename, astro_mid1name, astro_mid2name, astro_postname):
+    astro_prename, astro_mid1name, astro_mid2name, astro_postname, test):
 
     print(  astro_prename + '  vs  ' + astro_mid1name,
-            stats.mannwhitneyu(astro_pre, astro_mid1), '\n',
+            test(astro_pre, astro_mid1), '\n',
 
             astro_prename + '  vs  ' + astro_mid2name,
-            stats.mannwhitneyu(astro_pre, astro_mid2),'\n', 
+            test(astro_pre, astro_mid2),'\n', 
             
             astro_mid1name + '  vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_mid1, astro_post),'\n', 
+            test(astro_mid1, astro_post),'\n', 
 
             astro_mid1name + '  vs  ' + astro_mid2name,
-            stats.mannwhitneyu(astro_mid1, astro_mid2),'\n', 
+            test(astro_mid1, astro_mid2),'\n', 
 
             astro_mid2name + '  vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_mid2, astro_post),'\n', 
+            test(astro_mid2, astro_post),'\n', 
 
             astro_prename + '  vs  ' + astro_postname,
-            stats.mannwhitneyu(astro_pre, astro_post),'\n', )
+            test(astro_pre, astro_post),'\n', )
 
 
     
