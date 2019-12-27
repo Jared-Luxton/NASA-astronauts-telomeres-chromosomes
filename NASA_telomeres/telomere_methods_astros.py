@@ -21,6 +21,7 @@ from ptitprince import PtitPrince as pt
 
 from statsmodels.graphics.gofplots import qqplot
 from scipy import stats
+import scikit_posthocs as sp
 
 
 
@@ -1360,3 +1361,50 @@ def find_high_correlates_analytes_mean_telos(merged_analyte_blood_tidy_df, corr_
                     print(f"{astro} - {analyte}: {corr_value:.4f}")
                     
         return corr_value_tests
+    
+    
+def scipy_anova_post_hoc_tests(df=None, flight_status_col='flight status', target='telo data per cell',
+                               sig_test=stats.f_oneway, post_hoc=sp.posthoc_ttest):
+
+    g_1 = df[df[flight_status_col] == 'Pre-Flight'][target]
+    g_2 = df[df[flight_status_col] == 'Mid-Flight'][target]
+    g_3 = df[df[flight_status_col] == 'Post-Flight'][target]
+    statistic, p_value = sig_test(g_1, g_2, g_3)
+    print(f'ONE WAY ANOVA for telomere length: {p_value}')
+        
+    # if anova detects sig diff, perform post-hoc tests
+    if p_value <= 0.05:
+        display(sp.posthoc_ttest(df, val_col=target, group_col=flight_status_col, equal_var=False))
+        
+
+def id_encode_letters(row):
+    if row == '2171':
+        row = 'A'
+    elif row == '5163':
+        row = 'B'
+    elif row == '1536':
+        row = 'C'
+    return row
+
+
+def eval_make_test_comparisons(df=None, timepoints=None, test=None, test_name=None, 
+                               target='individual telos'):
+              
+    timepoints = list(df['timepoint'].unique())
+    timept_pairs = []
+    row = []
+    df_list = []
+              
+    for timept in timepoints:
+        df_list.append(df[df['timepoint'] == timept][target])
+              
+    for iter1, df in zip(timepoints, df_list):
+        for iter2, i in zip(timepoints, range(len(df_list))):
+            pair1, pair2 = f"{iter1}:{iter2}", f"{iter2}:{iter1}"
+            if iter1 != iter2 and pair1 not in timept_pairs and pair2 not in timept_pairs:
+                stat, pvalue = test(df, df_list[i])
+                print(f'{test_name} | {iter1} vs {iter2} {pvalue}')
+                timept_pairs.append(pair1)
+                timept_pairs.append(pair2)
+                row.append([test_name, iter1, iter2, pvalue])
+    return timept_pairs, row
