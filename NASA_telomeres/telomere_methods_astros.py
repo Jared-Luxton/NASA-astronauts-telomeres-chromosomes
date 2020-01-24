@@ -900,15 +900,15 @@ def graph_four_histograms(quartile_ref, n_bins, df1, df2, df3, df4,
                                                 name1, name2, name3, name4):
     
     n_bins = n_bins
-    fig, axs = plt.subplots(2,2, sharey=True, sharex=True, constrained_layout=True, figsize = (14, 9))
+    fig, axs = plt.subplots(2,2, sharey=True, sharex=True, constrained_layout=True, figsize = (10.5, 6.75))
     sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
     
     fig.add_subplot(111, frameon=False)
     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
     plt.grid(False)
     
-    plt.rc('xtick',labelsize=12)
-    plt.rc('ytick',labelsize=12)
+    plt.rc('xtick',labelsize=10)
+    plt.rc('ytick',labelsize=10)
     
 #     csfont = {'fontname':'sans-serif'}
 #     plt.suptitle(f"Individual Telomere Length Distributions at \nPre, Mid-1, Mid-2, and Post-Flight: {name1[0:8]}", 
@@ -925,14 +925,14 @@ def graph_two_histograms(quartile_ref, n_bins, df1, df2,
                                                name1, name2, controls=None):
     
     n_bins = n_bins
-    fig, axs = plt.subplots(2, sharey=True, constrained_layout=True, figsize = (10, 7))
+    fig, axs = plt.subplots(2, sharey=True, constrained_layout=True, figsize = (10.5, 6.75))
     sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
     
     for ax in axs.flat:
         ax.label_outer()
         
-    plt.rc('xtick',labelsize=12)
-    plt.rc('ytick',labelsize=12)
+    plt.rc('xtick',labelsize=10)
+    plt.rc('ytick',labelsize=10)
     
     astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
     astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
@@ -953,7 +953,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, 
     astroDF = astroDF.to_numpy()
     astroquartile = astroquartile.to_numpy()
 
-    N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
+    N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroDF, bins=n_bins, range=(0, 360), edgecolor='black')
 
     for a in range(len(patches)):
         if bins[a] <= np.quantile(astroquartile, 0.25):
@@ -969,9 +969,9 @@ def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, 
             patches[a].set_facecolor('#ffbacd')
 
 
-    axs[axsNUMone,axsNUMtwo].set_title(f"{astroname}", fontsize=18,)
+    axs[axsNUMone,axsNUMtwo].set_title(f"{astroname}", fontsize=10,)
     
-    font_axes=16
+    font_axes=10
 
     if axsNUMone == 0 and axsNUMtwo == 0:
         axs[axsNUMone,axsNUMtwo].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
@@ -983,7 +983,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, 
     if axsNUMone == 1 and axsNUMtwo == 1:
         axs[axsNUMone,axsNUMtwo].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
                   
-    axs[axsNUMone,axsNUMtwo].xaxis.set_major_locator(plt.MaxNLocator(12))
+    axs[axsNUMone,axsNUMtwo].xaxis.set_major_locator(plt.MaxNLocator(10))
         
 
         
@@ -993,38 +993,32 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
     astroquartile = astroquartile.to_numpy()
 
 
-    N, bins, patches = axs[axsNUMone].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
+    N, bins, patches = axs[axsNUMone].hist(astroDF, bins=n_bins, range=(0, 360), edgecolor='black')
 
     for a in range(len(patches)):
         if bins[a] <= np.quantile(astroquartile, 0.25):
             patches[a].set_facecolor('#fdff38')
-
         elif np.quantile(astroquartile, 0.25) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.50):
             patches[a].set_facecolor('#d0fefe')
-
         elif np.quantile(astroquartile, 0.50) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.75):
             patches[a].set_facecolor('#d0fefe')
-
         elif bins[a] > np.quantile(astroquartile, 0.75): 
             patches[a].set_facecolor('#ffbacd')
-
-
-    axs[axsNUMone].set_title(f"{astroname}", fontsize=18,)
+            
+    axs[axsNUMone].set_title(f"{astroname}", fontsize=10,)
     
-    font_axes=16
+    font_axes=10
 
     if axsNUMone == 0 or axsNUMone == 1:
         axs[axsNUMone].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
-        
     if axsNUMone == 1:
         axs[axsNUMone].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
             
-            
-    axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(12))
+    axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(10))
     
     
     
-def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, astro_ids=None):
+def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, astro_ids=None, nbins=60):
 
 #     astro_ids = ['5163', '2171', '1536', '7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']
     
@@ -1036,14 +1030,11 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, a
         
         if astro_id_num not in grouped_data.groups.keys():
             break
-
         plot_df = grouped_data.get_group(astro_id_num)
-
         for timepoint in ['L-270', 'L-180']:
             first_timepoint = initialize_telo_data_1st_timepoint_variable(timepoint=timepoint, df=plot_df)
             if first_timepoint.size > 30:
                 break
-
         quartile_ref = first_timepoint
 
     #     okay, now we have the first timepoint as the reference for making quartile cutoffs! 
@@ -1055,7 +1046,6 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, a
         if '5163' == astro_id_num or '1536' == astro_id_num:
             name_Mid1, astro_Mid1 = initialize_telo_data_timepoint_or_blank('FD90', plot_df)
             name_Mid2, astro_Mid2 = initialize_telo_data_timepoint_or_blank('FD140', plot_df)
-
         if '2171' == astro_id_num:
             name_Mid1, astro_Mid1 = initialize_telo_data_timepoint_or_blank('FD45', plot_df)
             name_Mid2, astro_Mid2 = initialize_telo_data_timepoint_or_blank('FD260', plot_df)
@@ -1065,8 +1055,7 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, a
 
 
         if ('5163' == astro_id_num) or ('2171' == astro_id_num) or ('1536' == astro_id_num):
-            
-            n_bins = 60
+            n_bins = n_bins
 
             if name_L270 != '': 
                         if name_R270 != '':
@@ -1086,13 +1075,11 @@ def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, a
         elif astro_id_num in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
             
             n_bins = 60
-
-            graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270,
-                                                   name_L270, name_R270)
+            graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270, name_L270, name_R270)
             
         plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png', dpi=600)
         
-#         plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
+        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
     
     
 def initialize_encoded_telo_data_timepoint_or_blank(timepoint, df):
@@ -1110,7 +1097,7 @@ def initialize_encoded_telo_data_timepoint_or_blank(timepoint, df):
         return name, timepoint_telo_data
     
     
-def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df=None, astro_ids=None):
+def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df=None, astro_ids=None, n_bins=60):
     grouped_data = exploded_telos_df.groupby('encoded astro id')
     for astro_id_num in astro_ids:
         if astro_id_num not in grouped_data.groups.keys():
@@ -1137,7 +1124,7 @@ def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df
 
 
         if ('B' == astro_id_num) or ('A' == astro_id_num) or ('C' == astro_id_num):
-            n_bins = 60
+            n_bins = n_bins
             if name_L270 != '': 
                         if name_R270 != '':
                             graph_four_histograms(quartile_ref, n_bins, astro_L270, astro_Mid1, astro_Mid2, astro_R270,
@@ -1153,14 +1140,13 @@ def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df
                             graph_four_histograms(quartile_ref, n_bins, astro_L180, astro_Mid1, astro_Mid2, astro_R180,
                                                                     name_L180, name_Mid1, name_Mid2, name_R180)
 
-        elif astro_id_num in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
-            n_bins = 60
-            graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270,
-                                                   name_L270, name_R270)
+#         elif astro_id_num in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
+#             n_bins = 60
+#             graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270, name_L270, name_R270)
             
         plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png', dpi=600)
         
-#         plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
+        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
 
 
 ########################################################################################################################
