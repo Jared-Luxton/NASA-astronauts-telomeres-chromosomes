@@ -900,7 +900,7 @@ def graph_four_histograms(quartile_ref, n_bins, df1, df2, df3, df4,
                                                 name1, name2, name3, name4):
     
     n_bins = n_bins
-    fig, axs = plt.subplots(2,2, sharey=True, sharex=True, constrained_layout=True, figsize = (10.5, 6.75))
+    fig, axs = plt.subplots(2,2, sharey=True, sharex=True, constrained_layout=True, figsize = (8, 6))
     sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
     
     fig.add_subplot(111, frameon=False)
@@ -925,7 +925,7 @@ def graph_two_histograms(quartile_ref, n_bins, df1, df2,
                                                name1, name2, controls=None):
     
     n_bins = n_bins
-    fig, axs = plt.subplots(2, sharey=True, constrained_layout=True, figsize = (10.5, 6.75))
+    fig, axs = plt.subplots(2, sharey=True, constrained_layout=True, figsize = (8, 6))
     sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
     
     for ax in axs.flat:
@@ -945,15 +945,14 @@ def graph_two_histograms(quartile_ref, n_bins, df1, df2,
 #         csfont = {'fontname':'sans-serif'}
 #         plt.suptitle(f"Individual Telomere Length Distributions at Pre and Post-Flight: All Control Samples", 
 #                      y=.95, fontsize=14, **csfont)
-        
-    
+
     
 def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone, axsNUMtwo):
 
     astroDF = astroDF.to_numpy()
     astroquartile = astroquartile.to_numpy()
 
-    N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroDF, bins=n_bins, range=(0, 360), edgecolor='black')
+    N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
 
     for a in range(len(patches)):
         if bins[a] <= np.quantile(astroquartile, 0.25):
@@ -968,16 +967,16 @@ def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, 
         elif bins[a] > np.quantile(astroquartile, 0.75): 
             patches[a].set_facecolor('#ffbacd')
 
-
-    axs[axsNUMone,axsNUMtwo].set_title(f"{astroname}", fontsize=10,)
+    modified_astroname = astroname.replace('astro', '')
+    axs[axsNUMone,axsNUMtwo].set_title(f"{modified_astroname}", fontsize=10,)
     
     font_axes=10
 
     if axsNUMone == 0 and axsNUMtwo == 0:
-        axs[axsNUMone,axsNUMtwo].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
+        axs[axsNUMone,axsNUMtwo].set_ylabel("Individual Telomere Counts", fontsize=font_axes)
         
     if axsNUMone == 1 and axsNUMtwo == 0:
-        axs[axsNUMone,axsNUMtwo].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
+        axs[axsNUMone,axsNUMtwo].set_ylabel("Individual Telomere Counts", fontsize=font_axes)
         axs[axsNUMone,axsNUMtwo].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
             
     if axsNUMone == 1 and axsNUMtwo == 1:
@@ -993,7 +992,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
     astroquartile = astroquartile.to_numpy()
 
 
-    N, bins, patches = axs[axsNUMone].hist(astroDF, bins=n_bins, range=(0, 360), edgecolor='black')
+    N, bins, patches = axs[axsNUMone].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
 
     for a in range(len(patches)):
         if bins[a] <= np.quantile(astroquartile, 0.25):
@@ -1010,7 +1009,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
     font_axes=10
 
     if axsNUMone == 0 or axsNUMone == 1:
-        axs[axsNUMone].set_ylabel("Counts of Individual Telomeres", fontsize=font_axes)
+        axs[axsNUMone].set_ylabel("Individual Telomere Counts", fontsize=font_axes)
     if axsNUMone == 1:
         axs[axsNUMone].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
             
@@ -1018,7 +1017,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
     
     
     
-def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, astro_ids=None, nbins=60):
+def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, astro_ids=None, nbins=45):
 
 #     astro_ids = ['5163', '2171', '1536', '7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']
     
