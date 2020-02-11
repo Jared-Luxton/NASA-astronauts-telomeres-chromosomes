@@ -24,7 +24,8 @@ def combine_midflight(row):
     
 
 def scipy_anova_post_hoc_tests(df=None, flight_status_col='flight status new',
-                               sig_test=stats.f_oneway, post_hoc=sp.posthoc_ttest):
+                               sig_test=stats.f_oneway, post_hoc=sp.posthoc_ttest,
+                               equal_var=False, pool_sd=False, repeated_measures=False):
     """
     df should be melted by aberration type
     """
@@ -33,14 +34,24 @@ def scipy_anova_post_hoc_tests(df=None, flight_status_col='flight status new',
     
     # loop through aberrations & perform anovas between pre/mid/post
     for aberr in aberrations:
-        g_1 = df[(df[flight_status_col] == 'pre-flight') & (df['aberration type'] == aberr)]['count per cell']
-        g_2 = df[(df[flight_status_col] == 'mid-flight') & (df['aberration type'] == aberr)]['count per cell']
-        g_3 = df[(df[flight_status_col] == 'post-flight') & (df['aberration type'] == aberr)]['count per cell']
-        statistic, p_value = sig_test(g_1, g_2, g_3)
-        print(aberr, p_value)
-        
+    
+        if repeated_measures == False:        
+            g_1 = df[(df[flight_status_col] == 'pre-flight') & (df['aberration type'] == aberr)]['count per cell']
+            g_2 = df[(df[flight_status_col] == 'mid-flight') & (df['aberration type'] == aberr)]['count per cell']
+            g_3 = df[(df[flight_status_col] == 'post-flight') & (df['aberration type'] == aberr)]['count per cell']
+            statistic, p_value = sig_test(g_1, g_2, g_3)
+            print(aberr, p_value)
+
+        elif repeated_measures:
+            results = AnovaRM(df[df['aberration type'] == aberr].copy(), 'count per cell', 'astro id', 
+                              within=[flight_status_col], aggregate_func='mean').fit()
+            # pvalue
+            p_value = results.anova_table['Pr > F'][0]
+
+
         # if anova detects sig diff, perform post-hoc tests
         if p_value <= 0.05:
             display(sp.posthoc_ttest(df[df['aberration type'] == aberr], val_col='count per cell', 
-                                     group_col='flight status new', equal_var=False))
-        print('\n')
+                                     group_col='flight status new', equal_var=equal_var,
+                                     pool_sd=pool_sd))
+            print('\n')
