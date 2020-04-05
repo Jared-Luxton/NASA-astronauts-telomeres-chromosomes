@@ -1,7 +1,6 @@
 # enables access to directories/files
 import os
 
-
 # for handling data
 import numpy as np
 from numpy import array
@@ -9,21 +8,58 @@ import pandas as pd
 from pandas import ExcelWriter
 from pandas import ExcelFile
 
-
 # graphing
 import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 from matplotlib import colors
 from matplotlib.ticker import PercentFormatter
 import seaborn as sns
-from ptitprince import PtitPrince as pt
 
-
+# statistics
 from statsmodels.graphics.gofplots import qqplot
 from scipy import stats
 import scikit_posthocs as sp
+from scipy.stats import zscore
+from scipy.stats import ks_2samp
+from statistics import mean 
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from scipy import stats
+from scipy.stats import zscore
+from scipy.stats import ks_2samp
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from statsmodels.stats.multicomp import MultiComparison
+import scikit_posthocs as sp
+from statsmodels.stats.anova import AnovaRM
+from statsmodels.stats.libqsturng import psturng
 
+import re
+from ast import literal_eval
+import more_itertools
+import math
 
+from matplotlib import lines
+from matplotlib.offsetbox import AnchoredText
+import imgkit
+
+# machine learning
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
+from xgboost import XGBRegressor
+from sklearn.metrics import explained_variance_score, r2_score
+from sklearn.metrics import median_absolute_error
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline, FeatureUnion
+from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import cross_val_score
+from sklearn import preprocessing
+import scipy.cluster.hierarchy as hac
+import matplotlib.gridspec as gridspec
+import random
+import six
 
 
 def generate_dictionary_for_telomere_length_data(patharg):
@@ -1359,7 +1395,49 @@ def scipy_anova_post_hoc_tests(df=None, flight_status_col='flight status', targe
         
     # if anova detects sig diff, perform post-hoc tests
     if p_value <= 0.05:
-        display(sp.posthoc_ttest(df, val_col=target, group_col=flight_status_col, equal_var=False))
+        print('bonferroni')
+        display(sp.posthoc_ttest(df, val_col=target, group_col=flight_status_col, equal_var=True,
+                                 p_adjust=None))
+        
+        
+def telos_scipy_anova_post_hoc_tests(df0=None, time_col='flight status', target='individual telomeres',
+                                     sig_test=stats.f_oneway, post_hoc=None, repeated_measures=False):
+    df = df0.copy()
+    df.rename({'telo data per cell': 'telo_data_per_cell',
+               'flight status': 'flight_status',
+               'Mean Telomere Length (qPCR)': 'Mean_Telomere_Length_(qPCR)',
+               'astro id': 'astro_id'}, axis=1, inplace=True)
+              
+    if ' ' in time_col:
+        time_col = time_col.replace(' ', '_')
+    if ' ' in target:
+        target = target.replace(' ', '_')
+    
+    if repeated_measures == False:
+        g_1 = df[df[time_col] == 'Pre-Flight'][target]
+        g_2 = df[df[time_col] == 'Mid-Flight'][target]
+        g_3 = df[df[time_col] == 'Post-Flight'][target]
+        statistic, p_value = sig_test(g_1, g_2, g_3)
+        print(f'ONE WAY ANOVA for telomere length: {p_value}')
+              
+    elif repeated_measures:
+        results = AnovaRM(df, target, 'astro_id', 
+                          within=[time_col], aggregate_func='mean').fit()
+        # pvalue
+        p_value = results.anova_table['Pr > F'][0]
+        print(f'REPEATED MEASURES ANOVA for telomere length: {p_value}')     
+          
+    # if anova detects sig diff, perform post-hoc tests
+    if p_value <= 0.05:
+        mc = MultiComparison(df[target], df[time_col])
+        mc_results = mc.tukeyhsd()
+        print(mc_results)
+        res = mc_results
+        print(f'TukeyHSD pvalues: {list(psturng(np.abs(res.meandiffs / res.std_pairs), len(res.groupsunique), res.df_total))}')
+        
+#         print('\nbonferroni pvalues')
+#         display(sp.posthoc_ttest(df, val_col=target, group_col=time_col, equal_var=False,
+#                                  p_adjust='bonferroni'))
         
 
 def id_encode_letters(row):
@@ -1393,3 +1471,456 @@ def eval_make_test_comparisons(df=None, timepoints=None, test=None, test_name=No
                 timept_pairs.append(pair2)
                 row.append([test_name, iter1, iter2, pvalue])
     return timept_pairs, row
+
+
+def make_post_flight_df_and_merge(astro_df=None, exploded_telos=None, timepoint=None):
+    """
+    parse out mean telomere length & #s short/long telomeres from specific post-flight (R+7, R+60, ... R+270) timepoints
+    and merge with exploded_telos dataframe for machine learning prep 
+    """
+    # parsing out post-flight data of interest
+    timepoint_df = astro_df[astro_df['timepoint'] == timepoint].copy()
+    for col in ['telo means', 'Q1', 'Q4']:
+        timepoint_df.rename({col: f'{timepoint} {col}'}, axis=1, inplace=True)
+        
+    timepoint_df.drop(['astro number', 'timepoint', 'flight status'], axis=1, inplace=True)
+    
+    # extracting pre-flight individual telomere data only
+    exploded_telos_pref = exploded_telos[exploded_telos['flight status'] == 'Pre-Flight'].copy()
+    exploded_telos_pref.drop(['astro number', 'flight status'], axis=1, inplace=True)
+    
+    merge_df = exploded_telos_pref.merge(timepoint_df, on=['astro id'])
+    return merge_df
+
+
+class make_features(BaseEstimator, TransformerMixin):
+    def __init__(self, make_log_individ_telos=False, make_log_target=False):
+        self.make_log_individ_telos = make_log_individ_telos
+        self.make_log_target = make_log_target
+        
+        
+    def fit(self, X, y=None):
+        return self
+    
+    
+    def create_log_individ_telos(self, X, y=None):
+        X['individual telos'] = np.log1p(X['individual telos'])
+        return X
+    
+    
+    def create_log_target(self, X, y=None):
+        X['4 C telo means'] = np.log1p(X['4 C telo means'])
+        return X
+        
+        
+    def transform(self, X, y=None):
+        if self.make_log_individ_telos:
+            X = self.create_log_individ_telos(X)
+            
+        if self.make_log_target:
+            X = self.create_log_target(X)
+        return X
+    
+    
+class make_dummies(BaseEstimator, TransformerMixin):
+    def __init__(self, drop_first=True, cols_to_dummify=['timepoint'], how_dummify='encode'):
+        self.drop_first = drop_first
+        self.cols_to_dummify = cols_to_dummify
+        self.how_dummify=how_dummify
+        
+    
+    def fit(self, X, y=None):
+        return self
+    
+    
+    def transf_dummies(self, X, y=None):
+        dummies = pd.get_dummies(X, drop_first=self.drop_first, columns=self.cols_to_dummify)
+        return dummies
+    
+    def label_encode(self, X, y=None):
+        label_encoder = preprocessing.LabelEncoder()
+        X['encoded_timepoint'] = label_encoder.fit_transform(X[self.cols_to_dummify].values.ravel())
+        X.drop(['timepoint'], axis=1, inplace=True)
+        return X
+    
+    
+    def transform(self, X, y=None):
+        if self.how_dummify == 'get_dummies':
+            X = self.transf_dummies(X)
+        elif self.how_dummify == 'encode':
+            X = self.label_encode(X)
+        return X
+    
+    
+class clean_data(BaseEstimator, TransformerMixin):
+    def __init__(self, drop_astro_id=True, timepoint='R+7', target='telo means'):
+        self.drop_astro_id = drop_astro_id
+        self.timepoint_target = f'{timepoint} {target}'
+        self.timepoint = timepoint
+        self.target = target
+    
+    
+    def fit(self, X, y=None):
+        return self
+    
+    
+    def transform(self, X, y=None):       
+
+#         enforcing col types
+        cols = list(X.columns)
+        for col in cols:
+            if 'individual telomeres' in col or 'telo means' in col:
+                X[col] = X[col].astype('float64')
+            else:
+                X[col] = X[col].astype('int64')
+        
+        if self.drop_astro_id:
+            X.drop(['astro id'], axis=1, inplace=True)
+            
+        X.reset_index(drop=True, inplace=True)
+        
+        target_cols = ['telo means', 'Q1', 'Q4']
+        target_cols.remove(self.target)
+        
+        for item in target_cols:
+            for col in X.columns:
+                if item in col:
+                    X.drop([col], axis=1, inplace=True)
+        
+#         if 'telo means' in self.target:
+#             X.drop([f'{timepoint} Q1', f'{timepoint} Q4'], axis=1, inplace=True)
+#         elif 'Q1' in self.target:
+#             X.drop([f'{timepoint} Q1', f'{timepoint} Q4'], axis=1, inplace=True)
+             
+#         X = X[['encoded_timepoint', 'individual telomeres', self.timepoint_target]].copy()
+        return X
+    
+    
+def cv_score_fit_mae_test(train_set=None, test_set=None, target=None,
+                          model=None, cv=5, scoring='neg_mean_absolute_error', verbose=True):
+    random.seed(888)
+    row = []
+    features = [col for col in train_set.columns if col != target and col != 'astro id']
+    
+    X_train = train_set[features].copy()
+    X_test = test_set[features].copy()
+    
+    y_train = train_set[target].copy()
+    y_test = test_set[target].copy()
+    
+    # cv
+    scores = -1 * cross_val_score(model, X_train, y_train, cv=5, scoring=scoring)
+    if verbose:
+        print(f'MAE per CV fold: \n{scores} \n')
+        print(f'MEAN of MAE all folds: {scores.mean()}')
+        print(f'STD of MAE all folds: {scores.std()}\n')
+
+    # fitting the model
+    model.fit(X_train, y_train)
+
+    # predict y_test from X_test - this is using the train/test split w/o shuff;ing
+    predict_y_test = model.predict(X_test)
+    if verbose:
+        print(f"MAE of predict_y_test & y_test: {mean_absolute_error(y_test, predict_y_test)}")
+        print(f'R2 between predict_y_test & y_test: {r2_score(y_test, predict_y_test)}')
+    
+    row.append(['XGBoost', features, target, round(scores.mean(), 4),
+                                             round(scores.std(), 4),
+                                             round(mean_absolute_error(y_test, predict_y_test), 4), 
+                                             round(r2_score(y_test, predict_y_test), 4)])
+    
+    return model, row 
+
+
+def myMetric(x, y):
+    r = stats.pearsonr(x, y)[0]
+    return 1 - r 
+
+
+def plot_dendogram(Z, target=None, indexer=None):
+    with plt.style.context('fivethirtyeight' ): 
+        plt.figure(figsize=(10, 2.5))
+        plt.title(f'Dendrogram of clusters by {target}', fontsize=22, fontweight='bold')
+        plt.xlabel('astro IDs', fontsize=22, fontweight='bold')
+        plt.ylabel('distance', fontsize=22, fontweight='bold')
+        hac.dendrogram(Z, labels=indexer, leaf_rotation=90.,    # rotates the x axis labels
+                        leaf_font_size=15., ) # font size for the x axis labels
+        plt.show()
+
+        
+def plot_results(timeSeries, D, cut_off_level, y_size, x_size, verbose):
+    result = pd.Series(hac.fcluster(D, cut_off_level, criterion='maxclust'))
+    if verbose:
+        clusters = result.unique() 
+        fig = plt.subplots(figsize=(x_size, y_size))   
+        mimg = math.ceil(cut_off_level/2.0)
+        gs = gridspec.GridSpec(mimg,2, width_ratios=[1,1])
+        cluster_indexed = pd.concat([result, timeSeries.reset_index()], axis=1)
+        cluster_indexed.rename({0: 'clusters'}, axis=1, inplace=True)
+        
+        for ipic, c in enumerate(clusters):
+            clustered = cluster_indexed[cluster_indexed['clusters'] == c].copy()
+            print(ipic, "Cluster number %d has %d elements" % (c, len(clustered['astro id'])))
+            melt = clustered.melt(id_vars=['astro id', 'clusters'], var_name='timepoint',value_name='telo means')
+            ax1 = plt.subplot(gs[ipic])
+            melt['astro id'] = melt['astro id'].astype('int64')
+            sns.lineplot(x='timepoint', y='telo means', hue='astro id', data=melt, sort=False, legend=False, ax=ax1)
+            ax1.set_title((f'Cluster number {c}'), fontsize=15, fontweight='bold')
+        plt.tight_layout()
+        
+    return result
+        
+        
+def cluster_data_return_df(df, target='telo means', cut_off_n=4, 
+                           metric=myMetric, method='single',
+                           y_size=6, x_size=10, verbose=True):
+
+    # run the clustering    
+    cluster_Z = hac.linkage(df, method=method, metric=metric)
+    if verbose:
+        plot_dendogram(cluster_Z, target=target, indexer=df.index)
+    # return df bearing cluster groups
+    indexed_clusters = plot_results(df, cluster_Z, cut_off_n, y_size=y_size, x_size=x_size, verbose=verbose)
+    
+    # concat clusters to original df and return
+    ready_concat = df.reset_index()
+    clustered_index_df = pd.concat([ready_concat, indexed_clusters], axis=1)
+    clustered_index_df.rename(columns={clustered_index_df.columns[-1]: f'{target} cluster groups'}, inplace=True)
+    melted = clustered_index_df.melt(id_vars=['astro id', f'{target} cluster groups'], 
+                                     var_name='timepoint', value_name=target)
+    return melted
+
+
+def graph_cluster_groups(df, target=None, hue=None, figsize=(7,3.2)):
+    flatui = ["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71"]
+    
+    plt.figure(figsize=figsize)
+    ax = sns.lineplot(x='timepoint', y=target, data=df, hue=hue,
+                      palette=sns.color_palette(flatui[:len(df[hue].unique())]),
+                      style=hue)
+
+    plt.setp(ax.get_xticklabels(), 
+#              rotation=45, 
+             fontsize=14)
+    if target == 'telo means':
+        ax.set_ylabel('Mean Telomere Length', fontsize=14)
+    elif 'short' in target:
+        ax.set_ylabel('Number of short telomeres', fontsize=14)
+    elif 'long' in target:
+        ax.set_ylabel('Number of long telomeres', fontsize=14)
+        
+    ax.set_xlabel('', fontsize=14)
+    ax.tick_params(labelsize=14)
+    
+    legend = ax.legend()
+    legend.texts[0].set_text('Cluster groups')
+    
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.18),
+          ncol=3, fancybox=True, fontsize=14)
+    
+#     plt.savefig(f'../graphs/paper figures/main figs/CLUSTERED GROUPS all patient {target} teloFISH.png', 
+#             dpi=400, bbox_inches = "tight")
+
+
+def convert_mid_timepoint(row):
+    if row == 'FD45' or row == 'FD90':
+        return 'Mid-1'
+    elif row == 'FD140' or row == 'FD260':
+        return 'Mid-2'
+    else:
+        return row
+    
+    
+def set_categories_sort(telomere_df=None, sort_list=None):
+    df = telomere_df.copy()
+    if sort_list == None:
+        sort_list = ['L-270', 'L-180', 'L-60', 'R+7', 'R+60', 'R+180', 'R+270']
+        
+    df['timepoint'] = df['timepoint'].astype('category')
+    df['timepoint'].cat.set_categories(sort_list, inplace=True)
+    return df
+
+
+def ext_telo_data_longitudinal_clustering(telomere_df=None, 
+                                          telomere_col_name='telo means',
+                                          col_to_pivot='timepoint',
+                                          timepts_of_interest=None):
+    df = telomere_df.copy()
+    if timepts_of_interest == None:
+        timepts_of_interest = ['L-270', 'L-180', 'L-60', 'R+7', 'R+60', 'R+180', 'R+270']
+    
+    # parse cols of interest
+    parsed_df = df[['astro id', col_to_pivot, telomere_col_name]].copy()
+    parsed_df[col_to_pivot] =  parsed_df[col_to_pivot].astype('str')
+    
+    # pivot out timepoints
+    pivot_df = parsed_df.pivot_table(index=['astro id'], columns=col_to_pivot, values=telomere_col_name).reset_index()
+    pivot_df.set_index('astro id', inplace=True)
+    cluster_ready_df = pivot_df[timepts_of_interest].copy()
+    return cluster_ready_df
+
+
+def rename_imputed_df(imputed_df=None, original_df=None):
+    imputed_df.columns = original_df.columns
+    imputed_df.index = original_df.index
+    imputed_df.columns.name = ''
+    return imputed_df
+
+
+def clustermap_plot(df=None, method='single', metric='correlation', 
+                    color_map='PRGn', col_cluster=False, fontsize=14,
+                    y_label='Mean Telomere Length (Telo-FISH)', save=True):
+
+    g = sns.clustermap(df, method=method, metric=metric, z_score=0, figsize=(7,7), 
+                       cmap=color_map, col_cluster=col_cluster) 
+
+    # colorbar 
+    g.cax.set_position([-0.05, .2, .03, .45])
+    g.cax.set_ylabel(y_label, rotation=90, fontsize=fontsize)
+    g.cax.tick_params(labelsize=12)
+
+    # modifying y axis
+    g.ax_heatmap.set_ylabel('Astronaut ID', fontsize=fontsize)
+    g.ax_heatmap.set_xlabel('')
+    labels = g.ax_heatmap.yaxis.get_majorticklabels()
+    plt.setp(g.ax_heatmap.yaxis.get_majorticklabels(), fontsize=fontsize)
+    plt.setp(g.ax_heatmap.yaxis.get_minorticklabels(), fontsize=fontsize)
+    g.ax_heatmap.set_yticklabels(labels, rotation=0, fontsize=fontsize, va="center")
+
+    # modifying x axis
+    plt.setp(g.ax_heatmap.xaxis.get_majorticklabels(), rotation=45, fontsize=fontsize)
+
+    for a in g.ax_row_dendrogram.collections:
+        a.set_linewidth(1)
+    for a in g.ax_col_dendrogram.collections:
+        a.set_linewidth(1)
+    
+    if save:
+        plt.savefig(f'testing {y_label} clustering.png', dpi=600, bbox_inches = "tight")
+        
+        
+def flight_status(row):
+    if 'FD90' in row or 'FD45' in row:
+        return 'Mid-Flight'
+    elif 'FD140' in row or 'FD260' in row:
+        return 'Mid-Flight'
+    elif 'L' in row:
+        return 'Pre-Flight'
+    elif 'R' in row:
+        return 'Post-Flight'
+    
+    
+def encode_timepts(row):
+    encode_dict = {'L-270' : 1,
+                   'R+7': 2, 
+                   'R+270': 3}
+    return encode_dict[row]
+
+
+def myMetric(x, y):
+    r = stats.pearsonr(x, y)[0]
+    return 1 - r 
+
+
+def plot_dendogram(Z, target=None, indexer=None):
+    with plt.style.context('fivethirtyeight' ): 
+        plt.figure(figsize=(10, 2.5))
+        plt.title(f'Dendrogram of clusters by {target}', fontsize=22, fontweight='bold')
+        plt.xlabel('astro IDs', fontsize=22, fontweight='bold')
+        plt.ylabel('distance', fontsize=22, fontweight='bold')
+        hac.dendrogram(Z, labels=indexer, leaf_rotation=90.,    # rotates the x axis labels
+                        leaf_font_size=15., ) # font size for the x axis labels
+        plt.show()
+
+        
+def plot_results(timeSeries, D, cut_off_level, y_size, x_size, verbose):
+    result = pd.Series(hac.fcluster(D, cut_off_level, criterion='maxclust'))
+    if verbose:
+        clusters = result.unique() 
+        fig = plt.subplots(figsize=(x_size, y_size))   
+        mimg = math.ceil(cut_off_level/2.0)
+        gs = gridspec.GridSpec(mimg,2, width_ratios=[1,1])
+        cluster_indexed = pd.concat([result, timeSeries.reset_index()], axis=1)
+        cluster_indexed.rename({0: 'clusters'}, axis=1, inplace=True)
+        
+        for ipic, c in enumerate(clusters):
+            clustered = cluster_indexed[cluster_indexed['clusters'] == c].copy()
+            print(ipic, "Cluster number %d has %d elements" % (c, len(clustered['astro id'])))
+            clustered.drop(['index'], axis=1, inplace=True)
+            melt = clustered.melt(id_vars=['astro id', 'clusters'], var_name='timepoint',value_name='telo means')
+            melt = set_categories_sort(telomere_df=melt, sort_list=['L-270', 'R+7', 'R+270'])
+            ax1 = plt.subplot(gs[ipic])
+            melt
+            sns.lineplot(x='timepoint', y='telo means', hue='astro id', data=melt, legend=False, ax=ax1)
+            ax1.set_title((f'Cluster number {c}'), fontsize=15, fontweight='bold')
+        plt.tight_layout()
+        
+    return result
+
+
+def encode_timepoints2(row):
+    if 'L-270' in row:
+        return 1
+    elif 'R+7' in row:
+        return 2
+    elif 'R+270' in row:
+        return 3
+    else:
+        pass
+        
+        
+def cluster_data_return_df(df=None, target='telo means', cut_off_n=4, 
+                           metric=myMetric, method='single',
+                           y_size=6, x_size=10, verbose=True):
+    
+#     astro_ids = df.index
+#     knn_telo_qpcr.reset_index(drop=True, inplace=True)
+    
+    # run the clustering    
+    cluster_Z = hac.linkage(df, method=method, metric=metric)
+    
+    if verbose:
+        plot_dendogram(cluster_Z, target=target, indexer=df.index)
+    # return df bearing cluster groups
+    df0 = df.copy().reset_index()
+    indexed_clusters = plot_results(df0, cluster_Z, cut_off_n, y_size=y_size, x_size=x_size, verbose=verbose)
+    
+    # concat clusters to original df and return
+    ready_concat = df.reset_index()
+    clustered_index_df = pd.concat([ready_concat, indexed_clusters], axis=1)
+    clustered_index_df.rename(columns={clustered_index_df.columns[-1]: f'{target} cluster groups',
+                                       1: 'L-270',
+                                       2: 'R+7',
+                                       3: 'R+270'}, inplace=True)
+    melted = clustered_index_df.melt(id_vars=['astro id', f'{target} cluster groups'], 
+                                     var_name='timepoint', value_name=target)
+    return melted
+
+
+def graph_cluster_groups(df, target=None, hue=None, figsize=(7,3.2), ncol=3):
+    flatui = ["#9b59b6",  "#2ecc71", "#e74c3c", "#95a5a6", "#34495e",  "#3498db"]
+    
+    plt.figure(figsize=figsize)
+    ax = sns.lineplot(x='timepoint', y=target, data=df, hue=hue,
+                      palette=sns.color_palette(flatui[:len(df[hue].unique())]),
+                      style=hue)
+
+    plt.setp(ax.get_xticklabels(), 
+#              rotation=45, 
+             fontsize=14)
+    if target == 'telo means':
+        ax.set_ylabel('Mean Telomere Length (Telo-FISH)', fontsize=14)
+    elif '(qPCR)' in target:
+        ax.set_ylabel('Mean Telomere Length (qPCR)', fontsize=14)
+        
+    ax.set_xlabel('', fontsize=14)
+    ax.tick_params(labelsize=14)
+    
+    legend = ax.legend()
+    legend.texts[0].set_text('Cluster groups')
+    
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.18),
+          ncol=ncol, fancybox=True, fontsize=14)
+    
+    plt.savefig(f'11 astronauts CLUSTERING {target}.png', 
+            dpi=600, bbox_inches = "tight")
