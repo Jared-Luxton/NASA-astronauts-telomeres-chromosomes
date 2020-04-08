@@ -1731,10 +1731,40 @@ def cluster_data_return_df(df, target='inversions', time='timepoint', cut_off_n=
     return melted
 
 
+def fish_assign_clustering(row):
+    cluster_dict = {'5163': 1,
+                    '2381': 1,
+                    '2494': 1,
+                    '1261': 2,
+                    '1536': 2,
+                    '7673': 2,
+                    '2171': 2,
+                    '4819': 2,
+                    '3228': 3,
+                    '1062': 3,
+                    '2479': 3}
+    return cluster_dict[row]
+
+
+def qpcr_assign_cluster(row):
+    cluster_grp_dict = {'2381': 1,
+                        '4819': 2,
+                        '5163': 2,
+                        '2171': 2,
+                        '3228': 2,
+                        '1062': 2,
+                        '2494': 2,
+                        '7673': 2,
+                        '2479': 3,
+                        '1261': 3,
+                        '1536': 3}
+    return cluster_grp_dict[row]
+
+
 def graph_cluster_groups(df, time=None, target=None, hue=None, colors='Set1', 
                          n_cols=3, y_label_name=None, figsize=(7,3.2),
                          fontsize=14, save=True, bbox_to_anchor=(0.5, 1.18),
-                         y_lim=None):
+                         y_lim=None, path_labels='11 astros'):
     
     colors = sns.color_palette(colors)
     
@@ -1760,7 +1790,7 @@ def graph_cluster_groups(df, time=None, target=None, hue=None, colors='Set1',
     plt.legend(loc='upper center', bbox_to_anchor=bbox_to_anchor,
           ncol=n_cols, fancybox=True, fontsize=fontsize)
     if save:
-        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/11 astros lineplot {target} clustering.png', 
+        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/{path_labels} lineplot {target} clustering.png', 
                 dpi=600, bbox_inches = "tight")
 
 
@@ -1811,7 +1841,7 @@ def rename_imputed_df(imputed_df=None, original_df=None):
 
 def clustermap_plot(df=None, method='single', metric='correlation', 
                     color_map='PRGn', col_cluster=False, fontsize=14, z_score=0,
-                    y_label='Mean Telomere Length (Telo-FISH)', path_labels=None,
+                    y_label='Mean Telomere Length (Telo-FISH)', path_labels='11 astros',
                     save=True):
 
     g = sns.clustermap(df, method=method, metric=metric, z_score=z_score, figsize=(7,7), 
@@ -1839,7 +1869,7 @@ def clustermap_plot(df=None, method='single', metric='correlation',
         a.set_linewidth(1)
     
     if save:
-        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/11 astros {y_label} {path_labels} cluster map.png', dpi=600, bbox_inches = "tight")
+        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/{path_labels} {y_label} cluster map.png', dpi=600, bbox_inches = "tight")
         
         
 def flight_status(row):
