@@ -62,6 +62,10 @@ import random
 import six
 
 from sklearn.preprocessing import LabelEncoder
+from matplotlib import colors
+from matplotlib.ticker import PercentFormatter
+from matplotlib import lines
+from matplotlib.offsetbox import AnchoredText
 
 
 def generate_dictionary_for_telomere_length_data(patharg):
@@ -1042,9 +1046,9 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
         elif bins[a] > np.quantile(astroquartile, 0.75): 
             patches[a].set_facecolor('#ffbacd')
             
-    axs[axsNUMone].set_title(f"{astroname}", fontsize=10,)
+    axs[axsNUMone].set_title(f"{astroname}", fontsize=16,)
     
-    font_axes=10
+    font_axes=16
 
     if axsNUMone == 0 or axsNUMone == 1:
         axs[axsNUMone].set_ylabel("Individual Telomere Counts", fontsize=font_axes)
@@ -1052,6 +1056,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
         axs[axsNUMone].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
             
     axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(10))
+    
     
     
     
@@ -1196,16 +1201,19 @@ def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df
 
 def select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest, target):
     
-    telomere_df['astro id'] = telomere_df['astro id'].astype('str')
-    
+    if 'astro id' in telomere_df.columns:
+        telomere_df['astro id'] = telomere_df['astro id'].astype('str')
     if 'astro id' in analyte_df.columns:
         analyte_df['astro id'] = analyte_df['astro id'].astype('str')
-    
     if 'sample type' in analyte_df.columns:
         analyte_df.drop('sample type', axis=1, inplace=True)
     
     # dropping unnecessary cols from telo df
-    trim_astro_df = telomere_df.drop(['astro number', 'timepoint'], axis=1)
+    for col in ['astro number', 'timepoint']:
+        if col in telomere_df.columns:
+            telomere_df.drop([col], axis=1, inplace=True)
+            
+    trim_astro_df = telomere_df.copy()
     
     if astro_ids_of_interest == 'all astros':
         
@@ -1379,16 +1387,16 @@ def find_high_correlates_analytes_mean_telos(merged_analyte_blood_tidy_df, corr_
                 corr_value = analyte_grouped_by_individ.get_group(analyte).corr()[target][int(corr_value_requested)]
                 corr_value_tests.append([astro, analyte, corr_value])
                 
-#                 if abs(corr_value) > corr_cutoff:
-#                     print(f"{astro} - {analyte}: {corr_value:.4f}")
-                    
         return corr_value_tests
     
     
-def plot_diverging_correlations(list_correlates=None, target_name=None, figsize=(11,7), dpi=300):
-    df = list_correlates
+def plot_diverging_correlations(list_correlates=None, target_name=None, figsize=(11,7), 
+                                dpi=600, color1='black', color2='green', fontsize=16,
+                                y_label_name='Blood biochemistry analytes', 
+                                path_labels='', save=True):
+    df = list_correlates.copy()
     x = df['correlation value']
-    df['colors'] = ['black' if x < 0 else 'green' for x in df['correlation value']]
+    df['colors'] = [color2 if x < 0 else color1 for x in df['correlation value']]
     df.sort_values('correlation value', inplace=True)
     df.reset_index(inplace=True, drop=True)
 
@@ -1396,17 +1404,54 @@ def plot_diverging_correlations(list_correlates=None, target_name=None, figsize=
     plt.hlines(y=df.index, xmin=0, xmax=df['correlation value'], color=df['colors'], alpha=0.6, linewidth=7)
 
     # Decorations
-    plt.yticks(df.index, df['biochemistry analyte'], fontsize=12)
-    plt.xticks(fontsize=14)
-    plt.xlabel(target_name, fontsize=16)
-    plt.ylabel('Blood biochemistry analytes', fontsize=16)
-#     plt.title(f'Correlation between {target_name} and Analytes', x=0.4, fontdict={'size':18})
+    plt.yticks(df.index, df['biochemistry analyte'], fontsize=fontsize)
+    plt.xticks(fontsize=fontsize)
+    plt.xlabel(target_name, fontsize=fontsize)
+    plt.ylabel(y_label_name, fontsize=fontsize)
 
     plt.grid(linestyle='-', alpha=.2, color='black')
     plt.tight_layout()
     my_xticks = np.array([-1, -.5, 0, .5, 1])
     plt.xticks(my_xticks[::1])
-#     plt.savefig(f'diverging bars {target_name} n=11.png')
+    
+    if save:
+        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/11 astros diverging bars {y_label_name} {target_name} {path_labels} n=11.png', 
+                    dpi=dpi, bbox_inches='tight')
+        
+        
+def analyze_biochem_analytes_target(df=None, target=None, melt_biochem_df=None, 
+                                    merge_telomere_biochem_data=False,
+                                    parse_correlation_values=True, abs_value_corr=0.6,
+                                    parse_corr_min=0, parse_corr_max=0.8,
+                                    color1='black', color2='green', fontsize=16,
+                                    figsize=(9,5), y_label_name='Blood biochemistry analytes',
+                                    path_labels='', save=True):
+
+    if merge_telomere_biochem_data:
+        # merge analyte & telomere data
+        merged_df = correlate_astro_analytes_telomeres_pipeline(analyte_df=melt_biochem_df, telomere_df=df, 
+                                                                target=target, astro_ids_of_interest='all astros',
+                                                                how_drop_missing='by melted row', 
+                                                                retain_what_flight_status='require at least one per status',
+                                                                telos_percent_change='no')
+    elif merge_telomere_biochem_data == False:
+        merged_df = df.copy()
+
+    # find highly correlated analytes
+    corr_value_tests = find_high_correlates_analytes_mean_telos(merged_df, abs_value_corr, corr_loc=0,
+                                                                        astro_ids=False, target=target)
+    # turn correlated analytes/mean telomere length into dataframe
+    blood_n11_high_corr_values = pd.DataFrame(corr_value_tests, columns=['biochemistry analyte', 'correlation value'])
+
+    if parse_correlation_values:
+        blood_n11_high_corr_values = blood_n11_high_corr_values[(blood_n11_high_corr_values['correlation value'] < parse_corr_min) | 
+                                                                (blood_n11_high_corr_values['correlation value'] > parse_corr_max)].copy()
+    # plot diverging bars correlates
+    plot_diverging_correlations(list_correlates=blood_n11_high_corr_values, 
+                                target_name=target, figsize=figsize,
+                                color1=color1, color2=color2, save=save,
+                                y_label_name=y_label_name, fontsize=fontsize,
+                                path_labels=path_labels)
     
     
 def scipy_anova_post_hoc_tests(df=None, flight_status_col='flight status', target='telo data per cell',
@@ -1431,6 +1476,7 @@ def telos_scipy_anova_post_hoc_tests(df0=None, time_col='flight status', target=
     df.rename({'telo data per cell': 'telo_data_per_cell',
                'flight status': 'flight_status',
                'Mean Telomere Length (qPCR)': 'Mean_Telomere_Length_(qPCR)',
+               'Telomerase Activity (qPCR)': 'Telomerase Activity (qPCR)',
                'astro id': 'astro_id'}, axis=1, inplace=True)
               
     if ' ' in time_col:
@@ -1763,15 +1809,16 @@ def qpcr_assign_cluster(row):
 
 def graph_cluster_groups(df, time=None, target=None, hue=None, colors='Set1', 
                          n_cols=3, y_label_name=None, figsize=(7,3.2),
-                         fontsize=14, save=True, bbox_to_anchor=(0.5, 1.18),
-                         y_lim=None, path_labels='11 astros'):
+                         fontsize=14, save=True, bbox_to_anchor=(0.5, 1.21),
+                         y_lim=None, path_labels='11 astros',
+                         markersize=13, markerscale=2, handlelength=1.22):
     
     colors = sns.color_palette(colors)
     
     plt.figure(figsize=figsize)
     ax = sns.lineplot(x=time, y=target, data=df, hue=hue, markers=True,
                       palette=sns.color_palette(colors[:len(df[hue].unique())]),
-                      style=hue, **{'markersize':11, 'mec':'black', 'mew':1})
+                      style=hue, **{'markersize': markersize, 'mec': 'black', 'mew': 1})
 
     plt.setp(ax.get_xticklabels(), 
 #              rotation=45, 
@@ -1787,8 +1834,8 @@ def graph_cluster_groups(df, time=None, target=None, hue=None, colors='Set1',
     if y_lim != None:
         ax.set_ylim(y_lim)
                          
-    plt.legend(loc='upper center', bbox_to_anchor=bbox_to_anchor,
-          ncol=n_cols, fancybox=True, fontsize=fontsize)
+    plt.legend(loc='upper center', bbox_to_anchor=bbox_to_anchor, handlelength=handlelength,
+          ncol=n_cols, fancybox=True, fontsize=fontsize, markerscale=markerscale)
     if save:
         plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/{path_labels} lineplot {target} clustering.png', 
                 dpi=600, bbox_inches = "tight")
@@ -2149,3 +2196,87 @@ def pull_merge_all_data(merge_what_data=None, how_groupby_telo_data=None, what_f
     return df_merged
 
 
+def graph_two_histograms_grp(quartile_ref, n_bins, df1, df2, name1, name2, path_labels=None, save=True):
+    
+    n_bins = n_bins
+    fig, axs = plt.subplots(2, sharey=True, constrained_layout=True, figsize = (5, 6.4))
+    sns.set_style(style="darkgrid",rc= {'patch.edgecolor': 'black'})
+    
+    for ax in axs.flat:
+        ax.label_outer()
+        
+    plt.rc('xtick',labelsize=16)
+    plt.rc('ytick',labelsize=16)
+    
+    telo_ma.astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
+    telo_ma.astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
+    
+    if save:
+        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/clustered group {path_labels} telo histograms.png',
+                   dpi=600, bbox_inches='tight')
+        
+        
+def graph_biochem_analyte_data(plot_left_y=None, plot_right_y=None, time=None, df=None, fsize=(8, 3.6),
+                               ax_color1='blue', ax_color2='green', alpha_c1=.8, alpha_c2=.5,
+                               left_y_name=None, right_y_name=None, 
+                               ylim1=None, ylim2=None, fontsize=16,
+                               bbox_to_anchor=(0.5, 1.17),
+                               markersize=13, markerscale=2,
+                               handlelength=1,
+                               save=True):
+    
+    plt.figure(figsize=fsize)
+    ax = sns.lineplot(x=time, y=plot_left_y, data=df, color=ax_color1, 
+                      **{'markersize': markersize, 'mec': 'black', 'mew': 1, 'alpha': alpha_c1, 'marker': 'o'})
+    ax2 = ax.twinx()
+    sns.lineplot(x=time, y=plot_right_y, data=df, color=ax_color2, ax=ax2,
+                 **{'markersize': markersize, 'mec': 'black', 'mew': 1, 'alpha': alpha_c2, 'marker': 'X'})
+    
+    if ylim1:
+        ax.set_ylim(ylim1)
+    if ylim2:
+        ax2.set_ylim(ylim2)
+       
+    # labeling each y axis
+    ax.set_ylabel(left_y_name, fontsize=fontsize)  
+    ax2.set_ylabel(right_y_name, fontsize=fontsize)
+    
+    # removing timepoint label from x
+    ax.set_xlabel('', fontsize=fontsize)
+    
+    # enforcing tick sizes
+    ax.tick_params(labelsize=fontsize)
+    ax2.tick_params(labelsize=fontsize)
+    plt.setp(ax.get_xticklabels(), fontsize=fontsize)
+    
+    # enforcing dashed line for 2nd y axis
+    ax2.lines[0].set_linestyle("--")
+
+    # creating custom legend
+    handles, labels = [], []
+    
+    line1 = lines.Line2D([], [], color=ax_color1, alpha=alpha_c1, linestyle='-', marker='o',)
+    line2 = lines.Line2D([], [], color=ax_color2, alpha=alpha_c2, linestyle='--', marker='X')
+    
+    handles.append(line1)
+    handles.append(line2)
+    
+    labels.append(left_y_name)
+    labels.append(right_y_name)
+    
+    plt.legend(handles, labels, loc='upper center', bbox_to_anchor=bbox_to_anchor, 
+               handlelength=handlelength, ncol=3, fancybox=True, 
+               fontsize=fontsize, markerscale=markerscale)
+    
+    # loc works the same as it does with figures (though best doesn't work) of padding between the border and text
+    # borderpad=5 will increase the distance between the border and the axes frameon=False will remove the box around the text
+    
+    r2_value = df[[plot_left_y, plot_right_y]].corr().iloc[0][1]
+    text = AnchoredText(f'R2= {r2_value.round(3)}', loc='upper right', 
+                        frameon=False, prop={'fontsize':fontsize, 'fontweight':'bold'})
+    ax.add_artist(text)
+    
+    if save:
+        plot_right_y = plot_right_y.replace('/', '_')
+        plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/11 astros {plot_left_y} vs {plot_right_y} corr.png', 
+                    dpi=600, bbox_inches = "tight")
