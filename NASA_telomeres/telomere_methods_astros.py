@@ -283,47 +283,47 @@ def get_astro_number_from_id(astro_id):
     astro_num = ''
     
     if astro_id == '5163':
-        astro_num = 1
+        astro_num = 99
         synth = 'synthetic 1'
         
     elif astro_id == '1536':
-        astro_num = 2
+        astro_num = 1
         synth = 'synthetic 2'
         
     elif astro_id == '7673':
-        astro_num = 3
+        astro_num = 2
         synth = 'synthetic 3'
         
     elif astro_id == '2479':
-        astro_num = 4
+        astro_num = 3
         synth = 'synthetic 4'
         
     elif astro_id == '2171':
-        astro_num = 5
+        astro_num = 4
         synth = 'synthetic 5'
     
     elif astro_id == '1261':
-        astro_num = 7
+        astro_num = 5
         synth = 'synthetic 7'
     
     elif astro_id == '3228':
-        astro_num = 8
+        astro_num = 6
         synth = 'synthetic 8'
         
     elif astro_id == '2381':
-        astro_num = 9 
+        astro_num = 98 
         synth = 'synthetic 9'
         
     elif astro_id == '4819':
-        astro_num = 10
+        astro_num = 7
         synth = 'synthetic 10'
         
     elif astro_id == '1062':
-        astro_num = 11
+        astro_num = 8
         synth = 'synthetic 11'
         
     elif astro_id == '2494':
-        astro_num = 12
+        astro_num = 9
         synth = 'synthetic 12'
         
     return astro_num, synth
@@ -949,18 +949,13 @@ def graph_four_histograms(quartile_ref, n_bins, df1, df2, df3, df4,
     plt.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)
     plt.grid(False)
     
-    plt.rc('xtick',labelsize=10)
-    plt.rc('ytick',labelsize=10)
-    
-#     csfont = {'fontname':'sans-serif'}
-#     plt.suptitle(f"Individual Telomere Length Distributions at \nPre, Mid-1, Mid-2, and Post-Flight: {name1[0:8]}", 
-#                  y=.95, fontsize=14, **csfont)
+    plt.rc('xtick',labelsize=16)
+    plt.rc('ytick',labelsize=16)
 
     astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df1, quartile_ref, name1, 0, 0)
     astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df2, quartile_ref, name2, 0, 1)
     astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df3, quartile_ref, name3, 1, 0)
     astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, df4, quartile_ref, name4, 1, 1)
-    
     
     
 def graph_two_histograms(quartile_ref, n_bins, df1, df2,
@@ -973,8 +968,8 @@ def graph_two_histograms(quartile_ref, n_bins, df1, df2,
     for ax in axs.flat:
         ax.label_outer()
         
-    plt.rc('xtick',labelsize=10)
-    plt.rc('ytick',labelsize=10)
+    plt.rc('xtick',labelsize=16)
+    plt.rc('ytick',labelsize=16)
     
     astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
     astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
@@ -1010,9 +1005,9 @@ def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, 
             patches[a].set_facecolor('#ffbacd')
 
     modified_astroname = astroname.replace('astro', '')
-    axs[axsNUMone,axsNUMtwo].set_title(f"{modified_astroname}", fontsize=10,)
+    axs[axsNUMone,axsNUMtwo].set_title(f"{modified_astroname}", fontsize=16,)
     
-    font_axes=10
+    font_axes=16
 
     if axsNUMone == 0 and axsNUMtwo == 0:
         axs[axsNUMone,axsNUMtwo].set_ylabel("Individual Telomere Counts", fontsize=font_axes)
@@ -1024,7 +1019,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, 
     if axsNUMone == 1 and axsNUMtwo == 1:
         axs[axsNUMone,axsNUMtwo].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
                   
-    axs[axsNUMone,axsNUMtwo].xaxis.set_major_locator(plt.MaxNLocator(10))
+    axs[axsNUMone,axsNUMtwo].xaxis.set_major_locator(plt.MaxNLocator(7))
         
 
         
@@ -1055,7 +1050,7 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
     if axsNUMone == 1:
         axs[axsNUMone].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
             
-    axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(10))
+    axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(7))
     
     
     
@@ -1139,7 +1134,7 @@ def initialize_encoded_telo_data_timepoint_or_blank(timepoint, df):
         return name, timepoint_telo_data
     
     
-def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df=None, astro_ids=None, n_bins=60):
+def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df=None, astro_ids=None, n_bins=60, save=True):
     grouped_data = exploded_telos_df.groupby('encoded astro id')
     for astro_id_num in astro_ids:
         if astro_id_num not in grouped_data.groups.keys():
@@ -1155,10 +1150,10 @@ def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df
         name_L270, astro_L270 = initialize_encoded_telo_data_timepoint_or_blank('L-270', plot_df)
         name_L180, astro_L180 = initialize_encoded_telo_data_timepoint_or_blank('L-180', plot_df)
 
-        if 'B' == astro_id_num or 'C' == astro_id_num:
+        if 'A' == astro_id_num or 'C' == astro_id_num:
             name_Mid1, astro_Mid1 = initialize_encoded_telo_data_timepoint_or_blank('FD90', plot_df)
             name_Mid2, astro_Mid2 = initialize_encoded_telo_data_timepoint_or_blank('FD140', plot_df)
-        if 'A' == astro_id_num:
+        if 'B' == astro_id_num:
             name_Mid1, astro_Mid1 = initialize_encoded_telo_data_timepoint_or_blank('FD45', plot_df)
             name_Mid2, astro_Mid2 = initialize_encoded_telo_data_timepoint_or_blank('FD260', plot_df)
         name_R180, astro_R180 = initialize_encoded_telo_data_timepoint_or_blank('R+180', plot_df)
@@ -1181,14 +1176,11 @@ def make_histograms_colored_by_quartile_for_encoded_astronauts(exploded_telos_df
                         elif name_R270 == '':
                             graph_four_histograms(quartile_ref, n_bins, astro_L180, astro_Mid1, astro_Mid2, astro_R180,
                                                                     name_L180, name_Mid1, name_Mid2, name_R180)
-
-#         elif astro_id_num in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
-#             n_bins = 60
-#             graph_two_histograms(quartile_ref, n_bins, astro_L270, astro_R270, name_L270, name_R270)
-            
-        plt.savefig(f'../individual telomere length histogram distributions/png/dso{astro_id_num} histogram of individual telomere length distributions.png', dpi=600)
         
-        plt.savefig(f'../individual telomere length histogram distributions/svg/dso{astro_id_num} histogram of individual telomere length distributions.svg', format='svg', dpi=1500)
+        if save:
+            plt.savefig(f'../MANUSCRIPT 2 ASTROS/figures/dso{astro_id_num} histogram of individual telomere length distributions.png',
+                        bbox_inches='tight', dpi=600)
+        
 
 
 ########################################################################################################################
@@ -1512,12 +1504,10 @@ def telos_scipy_anova_post_hoc_tests(df0=None, time_col='flight status', target=
         
 
 def id_encode_letters(row):
-    if row == '2171':
+    if row == '1536':
         row = 'A'
-    elif row == '5163':
+    elif row == '2171':
         row = 'B'
-    elif row == '1536':
-        row = 'C'
     return row
 
 
@@ -1860,7 +1850,8 @@ def set_categories_sort(telomere_df=None, time='timepoint', sort_list=None):
     return df
 
 
-def ext_telo_data_longitudinal_clustering(telomere_df=None, 
+def ext_telo_data_longitudinal_clustering(telomere_df=None,
+                                          astro_id='astro id',
                                           telomere_col_name='telo means',
                                           col_to_pivot='timepoint',
                                           timepts_of_interest=None):
@@ -1869,12 +1860,12 @@ def ext_telo_data_longitudinal_clustering(telomere_df=None,
         timepts_of_interest = ['L-270', 'L-180', 'L-60', 'R+7', 'R+60', 'R+180', 'R+270']
     
     # parse cols of interest
-    parsed_df = df[['astro id', col_to_pivot, telomere_col_name]].copy()
+    parsed_df = df[[astro_id, col_to_pivot, telomere_col_name]].copy()
     parsed_df[col_to_pivot] =  parsed_df[col_to_pivot].astype('str')
     
     # pivot out timepoints
-    pivot_df = parsed_df.pivot_table(index=['astro id'], columns=col_to_pivot, values=telomere_col_name).reset_index()
-    pivot_df.set_index('astro id', inplace=True)
+    pivot_df = parsed_df.pivot_table(index=[astro_id], columns=col_to_pivot, values=telomere_col_name).reset_index()
+    pivot_df.set_index(astro_id, inplace=True)
     cluster_ready_df = pivot_df[timepts_of_interest].copy()
     return cluster_ready_df
 
@@ -2207,9 +2198,10 @@ def graph_two_histograms_grp(quartile_ref, n_bins, df1, df2, name1, name2, path_
         
     plt.rc('xtick',labelsize=16)
     plt.rc('ytick',labelsize=16)
+    plt.tick_params(labelsize=16)
     
-    telo_ma.astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
-    telo_ma.astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
+    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df1, quartile_ref, name1, 0)
+    astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, df2, quartile_ref, name2, 1)
     
     if save:
         plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/clustered group {path_labels} telo histograms.png',
@@ -2280,3 +2272,13 @@ def graph_biochem_analyte_data(plot_left_y=None, plot_right_y=None, time=None, d
         plot_right_y = plot_right_y.replace('/', '_')
         plt.savefig(f'../MANUSCRIPT 11 ASTROS/figures/11 astros {plot_left_y} vs {plot_right_y} corr.png', 
                     dpi=600, bbox_inches = "tight")
+          
+    
+def enforce_astro_num(astro_id):
+    astro_id = str(astro_id)
+    astro_num_dict = {'1536': 1, '7673': 2, '2479': 3,
+                      '2171': 4, '1261': 5, '3228': 6,
+                      '4819': 7, '1062': 8, '2494': 9,
+                      '5163': 10, '2381': 11}
+    return astro_num_dict[astro_id]
+
