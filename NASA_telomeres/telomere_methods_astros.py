@@ -135,7 +135,7 @@ def generate_dictionary_for_telomere_length_data(patharg):
             if ('5163' in file.name) or ('1536' in file.name):
                 telos_individ_df_cy3Cal = telos_individ_df.div(59.86)
 
-            elif '2171' in file.name:
+            elif '2171' in file.name or '4419' in file.name:
                 telos_individ_df_cy3Cal = telos_individ_df.div(80.5)
 
             elif '7673' in file.name:
@@ -150,8 +150,7 @@ def generate_dictionary_for_telomere_length_data(patharg):
             else:
                 telos_individ_df_cy3Cal = telos_individ_df
             
-            #for publications & nasa data request 
-            #average of all cy3 calibrated control telo measurements (11 age matched controls)
+            # average of all cy3 calibrated control telo measurements (11 age matched controls)
 #             telos_individ_df_cy3Cal = telos_individ_df_cy3Cal.div(116.1848153)
 
             file_name_trimmed = file.name.replace('.xlsx', '')
@@ -161,56 +160,43 @@ def generate_dictionary_for_telomere_length_data(patharg):
     return dict_astro_individ_telos_dfs
 
 
-
 def astronaut_histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone, axsNUMtwo):
 
         astroDF = astroDF.to_numpy()
         astroquartile = astroquartile.to_numpy()
-
         N, bins, patches = axs[axsNUMone,axsNUMtwo].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
 
         for a in range(len(patches)):
             if bins[a] <= np.quantile(astroquartile, 0.25):
                 patches[a].set_facecolor('#fdff38')
-
             elif np.quantile(astroquartile, 0.25) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.50):
                 patches[a].set_facecolor('#d0fefe')
-
             elif np.quantile(astroquartile, 0.50) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.75):
                 patches[a].set_facecolor('#d0fefe')
-
             elif bins[a] > np.quantile(astroquartile, 0.75): 
                 patches[a].set_facecolor('#ffbacd')
-
 
         axs[axsNUMone,axsNUMtwo].set_title(f"Histogram of {astroname}'s Telomeres")
         axs[axsNUMone,axsNUMtwo].set_xlabel('Bins of Individ. Telomeres')
         axs[axsNUMone,axsNUMtwo].set_ylabel('Freqs of Individ. Telomeres')
         axs[axsNUMone,axsNUMtwo].xaxis.set_major_locator(plt.MaxNLocator(12))
         
-
         
 def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, astroDF, astroquartile, astroname, axsNUMone):
 
     astroDF = astroDF.to_numpy()
     astroquartile = astroquartile.to_numpy()
-
-
     N, bins, patches = axs[axsNUMone].hist(astroDF, bins=n_bins, range=(0, 400), edgecolor='black')
 
     for a in range(len(patches)):
         if bins[a] <= np.quantile(astroquartile, 0.25):
             patches[a].set_facecolor('#fdff38')
-
         elif np.quantile(astroquartile, 0.25) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.50):
             patches[a].set_facecolor('#d0fefe')
-
         elif np.quantile(astroquartile, 0.50) < bins[a] and bins[a] <= np.quantile(astroquartile, 0.75):
             patches[a].set_facecolor('#d0fefe')
-
         elif bins[a] > np.quantile(astroquartile, 0.75): 
             patches[a].set_facecolor('#ffbacd')
-
 
     axs[axsNUMone].set_title(f'Histogram of Individual Telomeres for {astroname}')
     axs[axsNUMone].set_xlabel('Bins of Individ. Telomeres')
@@ -273,7 +259,6 @@ def statistics_between_timepoints(astro_pre, astro_mid1, astro_mid2, astro_post,
 
     
 def statistics_between_timepoints_prepost_only(astro_pre, astro_post, astro_prename, astro_postname):
-
     print(astro_prename + '  compared vs  ' + astro_postname,
             stats.mannwhitneyu(astro_pre, astro_post),'\n', )
     
@@ -325,6 +310,10 @@ def get_astro_number_from_id(astro_id):
     elif astro_id == '2494':
         astro_num = 9
         synth = 'synthetic 12'
+        
+    elif astro_id == '4419':
+        astro_num = 1011
+        synth = 'synthetic 99'
         
     return astro_num, synth
 
@@ -390,12 +379,9 @@ def make_quartiles_columns(astro_df):
             
         elif row[flight] == 'Pre-Flight' and row[timepoint] == 'L-180':
             if 'L-270' in list(astro_df[astro_df['astro id'] == astro_id_4digit]['timepoint']):
-#                 print(f'L-270 present for {row[astro_id]}.. continuing')
                 astro_df.iat[i, pos_1], astro_df.iat[i, pos_2], astro_df.iat[i, pos_3] = (quartile_cts_rel_to_df1(preFlight_telos, row[telo_data]))
                 
             elif 'L-270' not in list(astro_df[astro_df['astro id'] == astro_id_4digit]['timepoint']):
-#                 print(f'L-270 is NOT present for {row[astro_id]}.. assigning L180')
-
                 preFlight_telos = row[telo_data]
                 astro_df.iat[i, pos_1], astro_df.iat[i, pos_2], astro_df.iat[i, pos_3] = (quartile_cts_rel_to_df1(preFlight_telos, preFlight_telos))
             
@@ -497,7 +483,6 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
                     continue
 
         if idNO == '5163' or idNO == '2171' or idNO == '1536':
-
             if (astro_L270.size > 25 or astro_L180.size > 25) and (astro_Mid1.size > 25 and astro_Mid2.size > 25 ) and (astro_R180.size > 25 or astro_R270.size > 25):
                 
                 n_cells = 30
@@ -561,8 +546,6 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
                 # plt.savefig('Final telomere histogram random sampling dso'+idNO+'.pdf')
                 plt.show()
 
-
-
         if idNO in ['7673', '4819', '3228', '2494', '2479', '2381', '1261', '1062']:
             if (astro_L270.size > 25) and (astro_R270.size > 25):
                 
@@ -590,10 +573,6 @@ def graphing_statistics_telomere_data(dict_astro_individ_telos_dfs):
         
         
 def grab_control_values_generate_dictionary(patharg):
-
-    """
-
-    """
 
     dict_mean_individ_telos_dfs = {}
 
@@ -652,10 +631,6 @@ def grab_control_values_generate_dictionary(patharg):
 
 
 def grab_control_telo_values_per_cell_generate_dictionary(patharg):
-
-    """
-
-    """
 
     dict_mean_individ_telos_dfs = {}
 
@@ -775,7 +750,6 @@ def make_astronaut_dataframe(dict_astro_individ_telos_dfs):
         time_point = get_timepoint(name_key)
         flight_status = relative_flight_timepoint(name_key)
         telo_value = gen_missing_values_andimpute_or_randomsampledown(30, 184, pd.Series(telo_value.values.reshape(-1,)), 'rsamp')
-
         data.append([astro_num, astro_id, time_point, flight_status, telo_value, np.mean(telo_value.values)])
 
     astro_df = pd.DataFrame(data, columns = ['astro number', 'astro id', 'timepoint', 'flight status', 'telo data', 'telo means'])
@@ -901,9 +875,7 @@ def histogram_plot_groups(x=None, data=None,
         telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, three_B,  non_irrad, f'patient #{item} 3 B', 1, 0)
         telo_mrp.histogram_stylizer_divyBins_byQuartile(fig, axs, n_bins, four_C,  non_irrad, f'patient #{item} 4 C', 1, 1)
         
-            
-        
-            
+             
 def initialize_telo_data_1st_timepoint_variable(timepoint=None, df=None):
 
     if timepoint in list(df['timepoint'].unique()):
@@ -1051,8 +1023,6 @@ def astronaut_histogram_stylizer_divyBins_byQuartile_2Stacked(fig, axs, n_bins, 
         axs[axsNUMone].set_xlabel("Bins of Individual Telomeres (RFI)", fontsize=font_axes)
             
     axs[axsNUMone].xaxis.set_major_locator(plt.MaxNLocator(7))
-    
-    
     
     
 def make_histograms_colored_by_quartile_for_astronauts(exploded_telos_df=None, astro_ids=None, nbins=45):
@@ -1207,7 +1177,7 @@ def select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest, ta
             
     trim_astro_df = telomere_df.copy()
     
-    if astro_ids_of_interest == 'all astros':
+    if 'all astros' in astro_ids_of_interest:
         
         # i.e as of 10/7/19 I only have n=4 (contains astro id col) & n=11 (no astro id) dataframes for analytes
         # I think when I received n=3 astros.. just type astro ids for astro_ids_of_interest, it will work properly
@@ -1222,7 +1192,7 @@ def select_astros_of_interest(analyte_df, telomere_df, astro_ids_of_interest, ta
             selected_astros = trim_astro_df
             id_values = ['flight status']
 
-    elif astro_ids_of_interest != 'all astros':
+    elif 'all astros' not in astro_ids_of_interest:
         # subset astro ids of interest 
         selected_astros = trim_astro_df[trim_astro_df['astro id'].isin(astro_ids_of_interest)].reset_index(drop=True)
         id_values = ['astro id', 'flight status']
@@ -1412,17 +1382,17 @@ def plot_diverging_correlations(list_correlates=None, target_name=None, figsize=
         
         
 def analyze_biochem_analytes_target(df=None, target=None, melt_biochem_df=None, 
-                                    merge_telomere_biochem_data=False,
+                                    merge_telomere_biochem_data=False, astro_ids_of_interest='all astros',
                                     parse_correlation_values=True, abs_value_corr=0.6,
                                     parse_corr_min=0, parse_corr_max=0.8,
                                     color1='black', color2='green', fontsize=16,
                                     figsize=(9,5), y_label_name='Blood biochemistry analytes',
                                     path_labels='', save=True):
 
-    if merge_telomere_biochem_data:
+    if merge_telomere_biochem_data == True:
         # merge analyte & telomere data
         merged_df = correlate_astro_analytes_telomeres_pipeline(analyte_df=melt_biochem_df, telomere_df=df, 
-                                                                target=target, astro_ids_of_interest='all astros',
+                                                                target=target, astro_ids_of_interest=astro_ids_of_interest,
                                                                 how_drop_missing='by melted row', 
                                                                 retain_what_flight_status='require at least one per status',
                                                                 telos_percent_change='no')
@@ -1444,6 +1414,8 @@ def analyze_biochem_analytes_target(df=None, target=None, melt_biochem_df=None,
                                 color1=color1, color2=color2, save=save,
                                 y_label_name=y_label_name, fontsize=fontsize,
                                 path_labels=path_labels)
+    
+    return merged_df
     
     
 def scipy_anova_post_hoc_tests(df=None, flight_status_col='flight status', target='telo data per cell',
@@ -2264,7 +2236,7 @@ def graph_biochem_analyte_data(plot_left_y=None, plot_right_y=None, time=None, d
     # borderpad=5 will increase the distance between the border and the axes frameon=False will remove the box around the text
     
     r2_value = df[[plot_left_y, plot_right_y]].corr().iloc[0][1]
-    text = AnchoredText(f'R2= {r2_value.round(3)}', loc='upper right', 
+    text = AnchoredText(f'R= {r2_value.round(3)}', loc='upper right', 
                         frameon=False, prop={'fontsize':fontsize, 'fontweight':'bold'})
     ax.add_artist(text)
     
@@ -2279,6 +2251,6 @@ def enforce_astro_num(astro_id):
     astro_num_dict = {'1536': 1, '7673': 2, '2479': 3,
                       '2171': 4, '1261': 5, '3228': 6,
                       '4819': 7, '1062': 8, '2494': 9,
-                      '5163': 10, '2381': 11}
+                      '5163': 10, '2381': 11, '4419': 12}
     return astro_num_dict[astro_id]
 
